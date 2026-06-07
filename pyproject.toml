@@ -1,0 +1,13 @@
+[project]
+name = "fx-lab"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dukascopy-python>=4.0.1",
+    "joblib>=1.5.3",
+    "pyarrow>=24.0.0",
+    "ta>=0.11.0",
+    "vectorbt>=1.0.0",
+]
