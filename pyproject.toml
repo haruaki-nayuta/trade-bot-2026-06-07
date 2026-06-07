@@ -1,7 +1,7 @@
 [project]
 name = "fx-lab"
 version = "0.1.0"
-description = "Add your description here"
+description = "FX手法のリサーチ〜10年バックテスト検証〜改善提案を一気通貫で行う環境"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -11,3 +11,13 @@ dependencies = [
     "ta>=0.11.0",
     "vectorbt>=1.0.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::FutureWarning"]

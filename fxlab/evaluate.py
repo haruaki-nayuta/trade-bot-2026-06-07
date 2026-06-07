@@ -51,11 +51,14 @@ def evaluate(
     primary_tf: str = "H1",
     timeframes: list[str] | None = None,
     objective: str = "sharpe",
+    size_mode: str = "full",
+    size_value: float | None = None,
 ) -> dict:
     gen = module.generate_signals
     grid = getattr(module, "PARAM_GRID", None)
     default_params = getattr(module, "PARAMS", {})
     timeframes = timeframes or ["M15", "H1", "H4", "D1"]
+    szkw = {"size_mode": size_mode, "size_value": size_value}  # サイジングを全検証へ伝播
 
     full = load(primary_pair, primary_tf)
     period = (full.index.min(), full.index.max())
@@ -69,11 +72,13 @@ def evaluate(
         "period": period,
         "years": years,
         "bars": len(full),
+        "size_mode": size_mode,
+        "size_value": size_value,
     }
 
     # A. 主ペア×主足の探索(グリッドが無ければデフォルト1点)
     if grid:
-        res = sweep(primary_pair, primary_tf, gen, grid, objective=objective)
+        res = sweep(primary_pair, primary_tf, gen, grid, objective=objective, **szkw)
         best = _best_params(res)
         out["sweep"] = res
         out["grid"] = grid
@@ -83,17 +88,17 @@ def evaluate(
         out["sweep"] = None
         out["grid"] = None
     out["best_params"] = best
-    out["best_metrics"] = _m(run(primary_pair, primary_tf, gen, best))
+    out["best_metrics"] = _m(run(primary_pair, primary_tf, gen, best, **szkw))
 
     # B. IS / OOS
     is_df, oos_df = _time_split(full, 0.7)
     if grid:
-        is_res = sweep(primary_pair, primary_tf, gen, grid, data=is_df, objective=objective)
+        is_res = sweep(primary_pair, primary_tf, gen, grid, data=is_df, objective=objective, **szkw)
         is_best = _best_params(is_res)
     else:
         is_best = dict(default_params)
-    is_m = _m(run(primary_pair, primary_tf, gen, is_best, data=is_df))
-    oos_m = _m(run(primary_pair, primary_tf, gen, is_best, data=oos_df))
+    is_m = _m(run(primary_pair, primary_tf, gen, is_best, data=is_df, **szkw))
+    oos_m = _m(run(primary_pair, primary_tf, gen, is_best, data=oos_df, **szkw))
     out["is_oos"] = {
         "is_params": is_best,
         "is": is_m,
@@ -106,7 +111,7 @@ def evaluate(
     rows = {}
     for pair in available_pairs():
         try:
-            rows[pair] = _m(run(pair, primary_tf, gen, best))
+            rows[pair] = _m(run(pair, primary_tf, gen, best, **szkw))
         except Exception:  # noqa: BLE001
             pass
     out["all_pairs"] = pd.DataFrame(rows).T if rows else pd.DataFrame()
@@ -115,7 +120,7 @@ def evaluate(
     rows = {}
     for tf in timeframes:
         try:
-            rows[tf] = _m(run(primary_pair, tf, gen, best))
+            rows[tf] = _m(run(primary_pair, tf, gen, best, **szkw))
         except Exception:  # noqa: BLE001
             pass
     out["timeframes"] = pd.DataFrame(rows).T if rows else pd.DataFrame()
@@ -123,7 +128,7 @@ def evaluate(
     # E. ロング / ショート分離
     rows = {}
     for side in ("both", "long", "short"):
-        rows[side] = _m(run(primary_pair, primary_tf, gen, best, side=side))
+        rows[side] = _m(run(primary_pair, primary_tf, gen, best, side=side, **szkw))
     out["sides"] = pd.DataFrame(rows).T
 
     # F. 損切り/利確/トレーリング 自動テスト(改善余地の実測)
@@ -138,12 +143,67 @@ def evaluate(
     ]
     rows = {}
     for name, kw in variants:
-        rows[name] = _m(run(primary_pair, primary_tf, gen, best, **kw))
+        rows[name] = _m(run(primary_pair, primary_tf, gen, best, **kw, **szkw))
     stops = pd.DataFrame(rows).T
     out["stops"] = stops
 
     out["diagnostics"] = diagnose(out)
     return out
+
+
+# --- ウォークフォワード最適化(ローリング) ----------------------------
+def walk_forward(
+    strategy_name: str,
+    module,
+    *,
+    pair: str = "EURUSD",
+    tf: str = "H1",
+    n_folds: int = 5,
+    objective: str = "sharpe",
+) -> dict:
+    """アンカード・ウォークフォワード。各 fold で「過去全部で最適化→次の窓で素検証」。
+
+    単一 IS/OOS より厳しく、毎回その時点までの情報だけで選んだパラメータの
+    アウトオブサンプル成績を積み上げる。再最適化を繰り返しても通用するかを見る。
+
+    返り値: {folds: DataFrame, summary: Series, consistency: float}
+    """
+    gen = module.generate_signals
+    grid = getattr(module, "PARAM_GRID", None)
+    full = load(pair, tf)
+    n = len(full)
+    seg = n // (n_folds + 1)
+
+    rows = []
+    for i in range(n_folds):
+        train = full.iloc[: (i + 1) * seg]
+        test = full.iloc[(i + 1) * seg : (i + 2) * seg]
+        if len(test) < 30:
+            continue
+        if grid:
+            res = sweep(pair, tf, gen, grid, data=train, objective=objective)
+            bp = _best_params(res)
+        else:
+            bp = dict(getattr(module, "PARAMS", {}))
+        m = _m(run(pair, tf, gen, bp, data=test))
+        rows.append({
+            "fold": i + 1,
+            "test_start": test.index.min(),
+            "test_end": test.index.max(),
+            "params": bp,
+            "total_return": m["total_return"],
+            "sharpe": m["sharpe"],
+            "max_drawdown": m["max_drawdown"],
+            "num_trades": m["num_trades"],
+        })
+
+    folds = pd.DataFrame(rows)
+    if folds.empty:
+        return {"folds": folds, "summary": pd.Series(dtype=float), "consistency": float("nan")}
+    summary = folds[["total_return", "sharpe", "max_drawdown", "num_trades"]].mean()
+    consistency = float((folds["sharpe"] > 0).mean())  # OOSでプラスだったfoldの割合
+    return {"folds": folds, "summary": summary, "consistency": consistency,
+            "strategy": strategy_name, "pair": pair, "tf": tf}
 
 
 # --- 改善提案(データ駆動ヒューリスティクス) --------------------------

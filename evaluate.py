@@ -54,6 +54,9 @@ def build_report(out: dict) -> str:
     L.append("")
     L.append(f"- 期間: **{p0:%Y-%m-%d} 〜 {p1:%Y-%m-%d}(約 {out['years']} 年 / {out['bars']:,} 本)**")
     L.append(f"- 採用パラメータ: `{out['best_params']}`")
+    sz = out.get("size_mode", "full")
+    if sz != "full":
+        L.append(f"- サイジング: **{sz}**" + (f" ({out.get('size_value')})" if out.get("size_value") is not None else ""))
     L.append(f"- **総合判定: {_verdict(out)}**")
     L.append("")
 
@@ -114,12 +117,38 @@ def build_report(out: dict) -> str:
     return "\n".join(L)
 
 
+def _wf_section(wf: dict) -> str:
+    L = ["## 🔁 ウォークフォワード最適化(毎回その時点までで最適化→次窓で素検証)"]
+    folds = wf["folds"]
+    if folds.empty:
+        L.append("(データ不足でfoldを構成できず)")
+        return "\n".join(L)
+    s = wf["summary"]
+    L.append(f"- OOSでプラスだったfold: **{wf['consistency']*100:.0f}%**  "
+             f"(平均 Sharpe {s['sharpe']:+.2f} / 平均リターン {s['total_return']:+.2%} / 平均DD {s['max_drawdown']:.2%})")
+    disp = folds.copy()
+    disp["params"] = disp["params"].astype(str)
+    for c in ("test_start", "test_end"):
+        disp[c] = pd.to_datetime(disp[c]).dt.strftime("%Y-%m-%d")
+    for c in ("total_return", "sharpe", "max_drawdown"):
+        disp[c] = disp[c].round(3)
+    L.append("```")
+    L.append(disp.to_string(index=False))
+    L.append("```")
+    return "\n".join(L)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="戦略を10年スパンで総合評価＋改善提案")
     ap.add_argument("strategy", help="strategies/ のモジュール名(拡張子なし)")
     ap.add_argument("--pair", default="EURUSD")
     ap.add_argument("--tf", default="H1")
     ap.add_argument("--tfs", nargs="*", help="マルチ時間足の対象(既定: M15 H1 H4 D1)")
+    ap.add_argument("--size", default="full", choices=["full", "value", "amount", "risk"],
+                    help="サイジング: full(複利) / value(固定額) / amount(固定数量) / risk(リスク%)")
+    ap.add_argument("--size-value", type=float, help="size の値(risk なら 0.01=1%, value なら金額 等)")
+    ap.add_argument("--wf", action="store_true", help="ウォークフォワード最適化も実施")
+    ap.add_argument("--folds", type=int, default=5, help="ウォークフォワードの分割数")
     ap.add_argument("--save", action="store_true", help="results/ に Markdown 保存")
     args = ap.parse_args()
 
@@ -128,8 +157,12 @@ def main() -> int:
     out = ev.evaluate(
         args.strategy, mod,
         primary_pair=args.pair, primary_tf=args.tf, timeframes=args.tfs,
+        size_mode=args.size, size_value=args.size_value,
     )
     report = build_report(out)
+    if args.wf:
+        wf = ev.walk_forward(args.strategy, mod, pair=args.pair, tf=args.tf, n_folds=args.folds)
+        report += "\n\n" + _wf_section(wf)
     print(report)
     print(f"\n(評価時間 {time.time()-t0:.1f}s)")
     if args.save:

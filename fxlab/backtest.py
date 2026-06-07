@@ -67,14 +67,62 @@ def _stop_kwargs(sl_stop, tp_stop, tsl_stop) -> dict:
     vectorbt はトレーリングを sl_stop + sl_trail=True で表現する。
     """
     k = {}
-    if tsl_stop:
+    if tsl_stop is not None:
         k["sl_stop"] = tsl_stop
         k["sl_trail"] = True
-    elif sl_stop:
+    elif sl_stop is not None:
         k["sl_stop"] = sl_stop
-    if tp_stop:
+    if tp_stop is not None:
         k["tp_stop"] = tp_stop
     return k
+
+
+def _atr_frac(data: pd.DataFrame, period: int = 14) -> pd.Series:
+    """ATR を価格比(割合)で返す。リスク%サイジングのストップ幅算出に使う。"""
+    h, l, c = data["high"], data["low"], data["close"]
+    pc = c.shift()
+    tr = pd.concat([(h - l), (h - pc).abs(), (l - pc).abs()], axis=1).max(axis=1)
+    return tr.rolling(period).mean() / c
+
+
+# --- ポジションサイジング -----------------------------------------------
+_MAX_LEVERAGE = 30.0  # FX リテール想定の上限(リスク%モードの暴走防止)
+
+
+def _size_kwargs(size_mode, size_value, atr_mult, data, init_cash, sl_stop):
+    """サイジングを from_signals 用に整形。戻り値 (kwargs, 実効sl_stop)。
+
+      full    : 既定。余力フル(複利・両建て反転に対応)= vectorbt 既定挙動
+      value   : 固定キャッシュ建玉(既定 init_cash。非複利で時系列比較しやすい)
+      amount  : 固定数量(単位)
+      risk    : 1トレードのリスク = init_cash * size_value(既定1%)。
+                ATR ストップ(atr_mult×ATR)到達でその損失になるよう建玉を調整。
+                sl_stop 未指定なら ATR ストップを自動設定。
+
+    注: 'percent'(余力割合)は from_signals のポジション反転に非対応のため非提供。
+        フル複利は 'full'、固定割合相当は 'value' を使う。
+    """
+    if size_mode == "full":
+        return {}, sl_stop  # size 未指定 = vectorbt 既定(余力フル・反転対応)
+    if size_mode == "value":
+        return {"size": init_cash if size_value is None else size_value, "size_type": "value"}, sl_stop
+    if size_mode == "amount":
+        if size_value is None:
+            raise ValueError("size_mode='amount' は size_value(数量)が必要")
+        return {"size": size_value, "size_type": "amount"}, sl_stop
+    if size_mode == "risk":
+        rp = 0.01 if size_value is None else size_value
+        if sl_stop is not None:
+            stop_frac = sl_stop  # 明示ストップがあればそれでリスク計算
+        else:
+            stop_frac = (atr_mult * _atr_frac(data)).clip(lower=1e-4).bfill()
+        value = (init_cash * rp) / stop_frac
+        if hasattr(value, "clip"):
+            value = value.clip(upper=init_cash * _MAX_LEVERAGE)
+        else:
+            value = min(value, init_cash * _MAX_LEVERAGE)
+        return {"size": value, "size_type": "value"}, stop_frac
+    raise ValueError(f"未知の size_mode: {size_mode}")
 
 
 # --- 標準メトリクス ------------------------------------------------------
@@ -111,18 +159,24 @@ def run(
     sl_stop: float | None = None,
     tp_stop: float | None = None,
     tsl_stop: float | None = None,
+    size_mode: str = "full",
+    size_value: float | None = None,
+    atr_mult: float = 2.0,
 ) -> "vbt.Portfolio":
     """1 つの (ペア, 時間足, パラメータ) で検証し Portfolio を返す。
 
     data を渡すとその DataFrame を使う(期間スライス/IS・OOS 検証用)。
     side='long'/'short' で片側のみ、sl_stop/tp_stop/tsl_stop(割合)で
     損切り・利確・トレーリングを付与できる(改善案の自動検証用)。
+    size_mode で建玉量を制御: full(既定=余力フル/複利) / value(固定キャッシュ) /
+    amount(固定数量) / risk(1トレード size_value=リスク%、ATR ストップ基準)。
 
     例:
         from strategies.ma_cross import generate_signals
         pf = run("EURUSD", "H1", generate_signals, {"fast": 20, "slow": 50})
-        print(metrics(pf))
-        pf.plot().show()   # チャート
+        # 1トレード1%リスク(ATR2倍ストップ)で現実的に:
+        pf = run("EURUSD", "H1", generate_signals, {"fast":20,"slow":50},
+                 size_mode="risk", size_value=0.01)
     """
     from .data import load
 
@@ -133,6 +187,7 @@ def run(
     le, lx, se, sx = _apply_side(le, lx, se, sx, side)
     close = data["close"]
     freq = config.TIMEFRAMES[timeframe]
+    size_kw, sl_eff = _size_kwargs(size_mode, size_value, atr_mult, data, init_cash, sl_stop)
 
     pf = vbt.Portfolio.from_signals(
         close,
@@ -144,7 +199,8 @@ def run(
         fees=config.COMMISSION_FRACTION,
         init_cash=init_cash,
         freq=freq,
-        **_stop_kwargs(sl_stop, tp_stop, tsl_stop),
+        **size_kw,
+        **_stop_kwargs(sl_eff, tp_stop, tsl_stop),
     )
     return pf
 
@@ -163,6 +219,9 @@ def sweep(
     sl_stop: float | None = None,
     tp_stop: float | None = None,
     tsl_stop: float | None = None,
+    size_mode: str = "full",
+    size_value: float | None = None,
+    atr_mult: float = 2.0,
     n_jobs: int = -1,
 ) -> pd.DataFrame:
     """パラメータ総当りを並列・高速に検証し、結果を objective 降順で返す。
@@ -199,6 +258,7 @@ def sweep(
     se = pd.concat([s[2] for s in sigs], axis=1); se.columns = cols
     sx = pd.concat([s[3] for s in sigs], axis=1); sx.columns = cols
 
+    size_kw, sl_eff = _size_kwargs(size_mode, size_value, atr_mult, data, init_cash, sl_stop)
     pf = vbt.Portfolio.from_signals(
         close,
         entries=le,
@@ -209,7 +269,8 @@ def sweep(
         fees=config.COMMISSION_FRACTION,
         init_cash=init_cash,
         freq=freq,
-        **_stop_kwargs(sl_stop, tp_stop, tsl_stop),
+        **size_kw,
+        **_stop_kwargs(sl_eff, tp_stop, tsl_stop),
     )
     res = metrics(pf)
     if objective in res.columns:

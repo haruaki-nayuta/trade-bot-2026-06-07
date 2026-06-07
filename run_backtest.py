@@ -56,12 +56,16 @@ def main() -> int:
     ap.add_argument("--params", help="例: fast=10,slow=100")
     ap.add_argument("--sweep", action="store_true", help="PARAM_GRID で総当り探索")
     ap.add_argument("--all-pairs", action="store_true", help="7ペア横断で比較")
+    ap.add_argument("--size", default="full", choices=["full", "value", "amount", "risk"],
+                    help="サイジング: full(複利)/value(固定額)/amount(固定数量)/risk(リスク%)")
+    ap.add_argument("--size-value", type=float, help="size の値(risk なら 0.01=1% 等)")
     ap.add_argument("--save", action="store_true", help="結果を results/ に CSV 保存")
     ap.add_argument("--plot", action="store_true", help="チャートを results/ に HTML 出力")
     args = ap.parse_args()
 
     mod = importlib.import_module(f"strategies.{args.strategy}")
     gen = mod.generate_signals
+    szkw = {"size_mode": args.size, "size_value": args.size_value}
     t0 = time.time()
 
     if args.sweep:
@@ -73,7 +77,7 @@ def main() -> int:
         for v in grid.values():
             n *= len(v)
         print(f"探索: {args.strategy} on {args.pair} {args.tf} — {n} 通り\n")
-        res = backtest.sweep(args.pair, args.tf, gen, grid)
+        res = backtest.sweep(args.pair, args.tf, gen, grid, **szkw)
         print(res.head(15).to_string())
         print(f"\n{time.time()-t0:.1f}s")
         if args.save:
@@ -89,7 +93,7 @@ def main() -> int:
         rows = {}
         for pair in config.PAIRS:
             try:
-                pf = backtest.run(pair, args.tf, gen, params)
+                pf = backtest.run(pair, args.tf, gen, params, **szkw)
                 rows[pair] = backtest.metrics(pf).iloc[0]
             except FileNotFoundError:
                 print(f"  {pair}: データ未取得 — スキップ")
@@ -104,7 +108,7 @@ def main() -> int:
 
     # 単発
     print(f"単発: {args.strategy} {params} on {args.pair} {args.tf}\n")
-    pf = backtest.run(args.pair, args.tf, gen, params)
+    pf = backtest.run(args.pair, args.tf, gen, params, **szkw)
     print(backtest.metrics(pf).iloc[0].to_string())
     print(f"\n{time.time()-t0:.1f}s")
     if args.plot:
