@@ -16,9 +16,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import warnings
 
 import numpy as np
 import pandas as pd
+
+warnings.filterwarnings("ignore", message="Converting to PeriodArray")
 
 from fxlab import config, universe as uni
 from fxlab.backtest import run
