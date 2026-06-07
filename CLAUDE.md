@@ -61,8 +61,16 @@ economy/
 ├── extract_trades.py      ← ベスト/ワーストのトレード+直前の値動きを抽出
 ├── leaderboard.py         ← 全戦略を横並び比較(OOS Sharpe 降順)
 ├── run_backtest.py        ← 個別バックテスト CLI(単発/sweep/all-pairs)
+├── reports/               ← 検証の知見ログ(00_INDEX.md が目次)
+├── research/              ← 使い捨ての実験スクリプト(時系列の検証イテレーション)
+│   ├── experiments/       exp*.py … 反復検証ログ
+│   ├── money_management/  mm_*.py … 資金管理(ベットサイジング)ラボ
+│   ├── lab/               その他の探索ツール(bleed_lab/portfolio/screen 等)
+│   └── outputs/           実験が吐いた CSV
 ├── data/raw/              M1 parquet(EURUSD_M1.parquet ...)※gitignore
 └── results/              バックテスト結果 CSV/HTML/eval_*.md ※gitignore
+
+> `research/` のスクリプトはリポジトリ直下から **`uv run python -m research.<sub>.<name>`** で実行する(例: `uv run python -m research.experiments.exp22_verify`)。`fxlab`/`strategies` への import を解決するため直叩き `python research/.../x.py` ではなく `-m` を使う。コア API(`fxlab/`)とは独立した検証ログで、消えても本体は動く。
 ```
 
 ---
