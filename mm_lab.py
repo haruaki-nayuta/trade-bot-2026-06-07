@@ -108,6 +108,54 @@ def build_pool(tf=TF_DEFAULT, instruments=None, params=None, cross_spread=3.0,
     return pool
 
 
+def build_pool_for(strategy_mod, params, *, tf=TF_DEFAULT, instruments=None, cross_spread=3.0,
+                   tag=None, side="both", cache=True) -> pd.DataFrame:
+    """任意戦略のトレードを口座シミュ用の最小表に収集(build_pool の汎用版)。
+
+    補完エッジ候補(トレンド/ブレイク/キャリー等)を v2 と同じ (instr,entry,exit,dir,price,ret,…)
+    形式で取り出し、統合 MtM 口座テストに使う。tag でキャッシュ名を分ける。side で片側指定可。
+    """
+    uni.register_cross_spreads(cross_spread)
+    instruments = instruments or default_instruments()
+    win = (params or {}).get("window", 50)
+    tag = tag or getattr(strategy_mod, "__name__", "strat").split(".")[-1]
+    cache_path = config.RESULTS_DIR / f"mm_pool_{tag}_{tf}_{len(instruments)}_{side}.parquet"
+    if cache and cache_path.exists():
+        return pd.read_parquet(cache_path)
+
+    frames = []
+    for nm in instruments:
+        data = uni.instrument_data(nm, tf)
+        try:
+            pf = run(nm, tf, strategy_mod.generate_signals, params, data=data,
+                     size_mode="value", side=side)
+            tt = trade_table(pf, data)
+        except Exception:  # noqa: BLE001
+            continue
+        if tt.empty:
+            continue
+        close = data["close"]
+        z = _zscore(close, win)
+        vol = close.pct_change().rolling(20).std()
+        f = pd.DataFrame({
+            "instr": nm, "entry": tt["entry"].to_numpy(), "exit": tt["exit"].to_numpy(),
+            "dir": np.where(tt["dir"].to_numpy() == "Long", 1, -1),
+            "entry_price": tt["entry_price"].to_numpy(),
+            "ret": tt["return_pct"].to_numpy() / 100.0,
+            "bars_held": tt["bars_held"].to_numpy(),
+            "z_entry": np.abs(z.reindex(tt["entry"]).to_numpy()),
+            "vol_entry": vol.reindex(tt["entry"]).to_numpy(),
+        })
+        frames.append(f)
+    if not frames:
+        return pd.DataFrame(columns=["instr", "entry", "exit", "dir", "entry_price", "ret",
+                                     "bars_held", "z_entry", "vol_entry"])
+    pool = pd.concat(frames, ignore_index=True).sort_values("entry").reset_index(drop=True)
+    if cache:
+        pool.to_parquet(cache_path)
+    return pool
+
+
 def load_closes(tf=TF_DEFAULT, instruments=None, cross_spread=3.0, cache=True) -> pd.DataFrame:
     """共通バーグリッド上の close 行列(列=instr)。MtM 評価用に ffill。"""
     uni.register_cross_spreads(cross_spread)
