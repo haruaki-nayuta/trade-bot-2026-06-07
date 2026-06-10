@@ -1,0 +1,92 @@
+{
+  "gap_audit": {
+    "trail_level": 105.6,
+    "gap_close": 90.0,
+    "vbt_exit_price": 90.0,
+    "fills_at_stop_despite_gap": false
+  },
+  "repro_engine": {
+    "n": 142,
+    "sum_ret": 0.6192,
+    "pool_pf": 1.733,
+    "is_pf": 1.18,
+    "oos_pf": 2.29,
+    "is_sum": 0.0765,
+    "oos_sum": 0.5428,
+    "n_is": 74,
+    "n_oos": 68
+  },
+  "repro_manual_stopfill": {
+    "n": 150,
+    "sum_ret": 1.1343,
+    "pool_pf": 2.376,
+    "is_pf": 1.803,
+    "oos_pf": 2.871,
+    "is_sum": 0.3073,
+    "oos_sum": 0.827,
+    "n_is": 79,
+    "n_oos": 71
+  },
+  "repro_manual_closefill": {
+    "n": 150,
+    "sum_ret": 0.8174,
+    "pool_pf": 1.902,
+    "is_pf": 1.52,
+    "oos_pf": 2.242,
+    "is_sum": 0.2215,
+    "oos_sum": 0.5959,
+    "n_is": 79,
+    "n_oos": 71
+  },
+  "delay1_engine": {
+    "n": 146,
+    "sum_ret": 0.3369,
+    "pool_pf": 1.308,
+    "is_pf": 0.732,
+    "oos_pf": 2.003,
+    "is_sum": -0.1601,
+    "oos_sum": 0.4971,
+    "n_is": 76,
+    "n_oos": 70
+  },
+  "delay1_manual_closefill": {
+    "n": 150,
+    "sum_ret": 0.5649,
+    "pool_pf": 1.511,
+    "is_pf": 0.941,
+    "oos_pf": 2.211,
+    "is_sum": -0.0357,
+    "oos_sum": 0.6006,
+    "n_is": 79,
+    "n_oos": 71
+  },
+  "cost15_engine": {
+    "n": 142,
+    "sum_ret": 0.6047,
+    "pool_pf": 1.707,
+    "is_pf": 1.156,
+    "oos_pf": 2.267,
+    "is_sum": 0.067,
+    "oos_sum": 0.5377,
+    "n_is": 74,
+    "n_oos": 68
+  },
+  "ex2022": {
+    "ex2022_sum_by_exit_year": 0.4585,
+    "ex2022_sum_by_entry_year": 0.3996,
+    "sum_2022_only_by_exit_year": 0.1607
+  },
+  "yearly": {
+    "2016": -0.0179,
+    "2017": -0.029,
+    "2018": 0.0303,
+    "2019": 0.0643,
+    "2020": 0.0634,
+    "2021": -0.0399,
+    "2022": 0.1607,
+    "2023": -0.0103,
+    "2024": 0.2079,
+    "2025": 0.1164,
+    "2026": 0.0733
+  }
+}

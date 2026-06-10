@@ -1,0 +1,60 @@
+instruments (19): ['EURUSD', 'USDJPY', 'GBPUSD', 'AUDUSD', 'USDCHF', 'USDCAD', 'NZDUSD', 'EURGBP', 'EURCHF', 'EURAUD', 'EURCAD', 'GBPAUD', 'GBPCHF', 'AUDNZD', 'AUDCAD', 'NZDCAD', 'AUDCHF', 'EURJPY', 'GBPJPY']
+[net] hyst_tsmom_H1_lb24_b0: n=88711 pf=0.801 mean_bps=-2.18 oos_pf=0.82
+[net] hyst_tsmom_H1_lb24_b0.5: n=46751 pf=0.82 mean_bps=-2.9 oos_pf=0.782
+[net] hyst_tsmom_H1_lb48_b0: n=66558 pf=0.788 mean_bps=-2.56 oos_pf=0.77
+[net] hyst_tsmom_H1_lb48_b0.5: n=27027 pf=0.822 mean_bps=-3.68 oos_pf=0.761
+[net] hyst_tsmom_H1_lb120_b0: n=46467 pf=0.777 mean_bps=-2.94 oos_pf=0.777
+[net] hyst_tsmom_H1_lb120_b0.5: n=12671 pf=0.838 mean_bps=-4.62 oos_pf=0.838
+[net] hyst_tsmom_H1_lb360_b0: n=27310 pf=0.758 mean_bps=-3.55 oos_pf=0.713
+[net] hyst_tsmom_H1_lb360_b0.5: n=5112 pf=0.824 mean_bps=-7.48 oos_pf=0.769
+[net] hyst_tsmom_M30_lb48_b0: n=105173 pf=0.769 mean_bps=-2.07 oos_pf=0.828
+[net] hyst_tsmom_M30_lb48_b0.5: n=53419 pf=0.806 mean_bps=-2.87 oos_pf=0.772
+[net] hyst_tsmom_M30_lb96_b0: n=85066 pf=0.763 mean_bps=-2.31 oos_pf=0.782
+[net] hyst_tsmom_M30_lb96_b0.5: n=30762 pf=0.815 mean_bps=-3.53 oos_pf=0.754
+[net] hyst_tsmom_M30_lb240_b0: n=61784 pf=0.744 mean_bps=-2.72 oos_pf=0.757
+[net] hyst_tsmom_M30_lb240_b0.5: n=14315 pf=0.847 mean_bps=-3.98 oos_pf=0.843
+[net] hyst_tsmom_M15_lb96_b0: n=122633 pf=0.739 mean_bps=-1.88 oos_pf=0.847
+[net] hyst_tsmom_M15_lb96_b0.5: n=58103 pf=0.798 mean_bps=-2.79 oos_pf=0.777
+[net] hyst_tsmom_M15_lb192_b0: n=105410 pf=0.736 mean_bps=-2.09 oos_pf=0.778
+[net] hyst_tsmom_M15_lb192_b0.5: n=33921 pf=0.804 mean_bps=-3.48 oos_pf=0.742
+[gross] hyst_tsmom_H1_lb24_b0: n=106024 pf=0.947 mean_bps=-0.5 oos_pf=0.907
+[gross] hyst_tsmom_H1_lb24_b0.5: n=47314 pf=0.944 mean_bps=-0.81 oos_pf=0.901
+[gross] hyst_tsmom_H1_lb48_b0: n=74114 pf=0.935 mean_bps=-0.68 oos_pf=0.887
+[gross] hyst_tsmom_H1_lb48_b0.5: n=27027 pf=0.918 mean_bps=-1.58 oos_pf=0.851
+[gross] hyst_tsmom_H1_lb120_b0: n=46716 pf=0.929 mean_bps=-0.83 oos_pf=0.928
+[gross] hyst_tsmom_H1_lb120_b0.5: n=12671 pf=0.907 mean_bps=-2.52 oos_pf=0.909
+[gross] hyst_tsmom_H1_lb360_b0: n=27310 pf=0.894 mean_bps=-1.38 oos_pf=0.845
+[gross] hyst_tsmom_H1_lb360_b0.5: n=5112 pf=0.869 mean_bps=-5.38 oos_pf=0.812
+[gross] hyst_tsmom_M30_lb48_b0: n=151283 pf=0.929 mean_bps=-0.52 oos_pf=0.9
+[gross] hyst_tsmom_M30_lb48_b0.5: n=54506 pf=0.939 mean_bps=-0.81 oos_pf=0.899
+[gross] hyst_tsmom_M30_lb96_b0: n=105902 pf=0.922 mean_bps=-0.63 oos_pf=0.878
+[gross] hyst_tsmom_M30_lb96_b0.5: n=30762 pf=0.918 mean_bps=-1.43 oos_pf=0.852
+[gross] hyst_tsmom_M30_lb240_b0: n=66450 pf=0.92 mean_bps=-0.72 oos_pf=0.916
+[gross] hyst_tsmom_M30_lb240_b0.5: n=14315 pf=0.923 mean_bps=-1.89 oos_pf=0.921
+[gross] hyst_tsmom_M15_lb96_b0: n=212739 pf=0.916 mean_bps=-0.48 oos_pf=0.89
+[gross] hyst_tsmom_M15_lb96_b0.5: n=60626 pf=0.933 mean_bps=-0.82 oos_pf=0.898
+[gross] hyst_tsmom_M15_lb192_b0: n=150572 pf=0.915 mean_bps=-0.52 oos_pf=0.875
+[gross] hyst_tsmom_M15_lb192_b0.5: n=33921 pf=0.915 mean_bps=-1.39 oos_pf=0.846
+
+==== SUMMARY (net + gross diagnostics) ====
+                    label  tf                params      n  trades_per_year  sum_ret  pool_pf  is_pf  oos_pf  mean_bps  gross_mean_bps  gross_pf  gross_sum_ret  win_rate  avg_bars yearly_pos  worst_year
+    hyst_tsmom_H1_lb24_b0  H1  {'lb': 24, 'b': 0.0}  88711           8877.2 -19.3425    0.801  0.790   0.820     -2.18           -0.50     0.947        -5.2679     0.276      13.4       0/11     -2.8430
+  hyst_tsmom_H1_lb24_b0.5  H1  {'lb': 24, 'b': 0.5}  46751           4678.3 -13.5497    0.820  0.852   0.782     -2.90           -0.81     0.944        -3.8518     0.305      20.2       0/11     -1.8682
+    hyst_tsmom_H1_lb48_b0  H1  {'lb': 48, 'b': 0.0}  66558           6662.2 -17.0264    0.788  0.799   0.770     -2.56           -0.68     0.935        -5.0082     0.266      17.8       0/11     -2.6711
+  hyst_tsmom_H1_lb48_b0.5  H1  {'lb': 48, 'b': 0.5}  27027           2705.3  -9.9578    0.822  0.874   0.761     -3.68           -1.58     0.918        -4.2758     0.307      34.9       1/11     -2.2592
+   hyst_tsmom_H1_lb120_b0  H1 {'lb': 120, 'b': 0.0}  46467           4657.5 -13.6740    0.777  0.778   0.777     -2.94           -0.83     0.929        -3.8912     0.259      25.4       0/11     -2.3525
+ hyst_tsmom_H1_lb120_b0.5  H1 {'lb': 120, 'b': 0.5}  12671           1270.1  -5.8527    0.838  0.838   0.838     -4.62           -2.52     0.907        -3.1919     0.309      74.5       1/11     -1.2415
+   hyst_tsmom_H1_lb360_b0  H1 {'lb': 360, 'b': 0.0}  27310           2747.9  -9.6866    0.758  0.797   0.713     -3.55           -1.38     0.894        -3.7694     0.248      43.1       0/11     -2.0769
+ hyst_tsmom_H1_lb360_b0.5  H1 {'lb': 360, 'b': 0.5}   5112            514.4  -3.8232    0.824  0.870   0.769     -7.48           -5.38     0.869        -2.7524     0.306     186.4       1/11     -1.3183
+   hyst_tsmom_M30_lb48_b0 M30  {'lb': 48, 'b': 0.0} 105173          10524.5 -21.7196    0.769  0.745   0.828     -2.07           -0.52     0.929        -7.8186     0.256      22.5       0/11     -3.9623
+ hyst_tsmom_M30_lb48_b0.5 M30  {'lb': 48, 'b': 0.5}  53419           5345.6 -15.3326    0.806  0.834   0.772     -2.87           -0.81     0.939        -4.3987     0.297      35.4       0/11     -2.1628
+   hyst_tsmom_M30_lb96_b0 M30  {'lb': 96, 'b': 0.0}  85066           8514.8 -19.6133    0.763  0.753   0.782     -2.31           -0.63     0.922        -6.6258     0.245      27.8       0/11     -3.3066
+ hyst_tsmom_M30_lb96_b0.5 M30  {'lb': 96, 'b': 0.5}  30762           3079.2 -10.8610    0.815  0.866   0.754     -3.53           -1.43     0.918        -4.4122     0.296      61.3       1/11     -2.3005
+  hyst_tsmom_M30_lb240_b0 M30 {'lb': 240, 'b': 0.0}  61784           6192.8 -16.8173    0.744  0.735   0.757     -2.72           -0.72     0.920        -4.7544     0.237      38.3       1/11     -2.5581
+hyst_tsmom_M30_lb240_b0.5 M30 {'lb': 240, 'b': 0.5}  14315           1434.8  -5.6946    0.847  0.850   0.843     -3.98           -1.89     0.923        -2.7041     0.305     133.0       2/11     -1.2342
+   hyst_tsmom_M15_lb96_b0 M15  {'lb': 96, 'b': 0.0} 122633          12271.7 -23.0000    0.739  0.708   0.847     -1.88           -0.48     0.916       -10.1247     0.234      38.6       1/11     -5.4619
+ hyst_tsmom_M15_lb96_b0.5 M15  {'lb': 96, 'b': 0.5}  58103           5814.3 -16.2118    0.798  0.813   0.777     -2.79           -0.82     0.933        -4.9931     0.289      65.6       0/11     -2.0859
+  hyst_tsmom_M15_lb192_b0 M15 {'lb': 192, 'b': 0.0} 105410          10551.1 -21.9793    0.736  0.717   0.778     -2.09           -0.52     0.915        -7.8936     0.226      44.9       0/11     -4.1109
+hyst_tsmom_M15_lb192_b0.5 M15 {'lb': 192, 'b': 0.5}  33921           3395.4 -11.8195    0.804  0.857   0.742     -3.48           -1.39     0.915        -4.6985     0.288     111.9       0/11     -2.4412
+
+saved: /Users/yutootsuka/Documents/economy/.claude/worktrees/friendly-meitner-8d533c/research/outputs/trend2_tsmom_hysteresis.csv
