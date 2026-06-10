@@ -79,6 +79,8 @@ SPREADS_PIPS: dict[str, float] = {
     "USDCHF": 1.0,
     "USDCAD": 1.2,
     "NZDUSD": 1.4,
+    # 金(XAUUSD): pip=0.01 USD として 35pips = 0.35 USD/oz(Dukascopy 実勢 0.25-0.45 の保守側)
+    "XAUUSD": 35.0,
 }
 
 # 片道の手数料(約定代金に対する割合)。ECN想定の例: $30/100万 ≈ 0.00003。
@@ -88,6 +90,8 @@ COMMISSION_FRACTION = 0.0
 
 def pip_size(pair: str) -> float:
     """その通貨ペアの 1 pip の価格幅。"""
+    if pair.startswith("XAU"):
+        return 0.01  # 金は 1pip = 0.01 USD 慣行
     return 0.01 if pair.endswith("JPY") else 0.0001
 
 

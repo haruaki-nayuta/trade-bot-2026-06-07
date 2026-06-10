@@ -9,7 +9,8 @@ wheels/
 # Virtual environments
 .venv
 
-# データ(再取得可能・大容量)
+# データ(再取得可能・大容量)。worktree では data/raw が本体へのシンボリックリンクになる
+data/
 data/raw/
 data/*.log
 
