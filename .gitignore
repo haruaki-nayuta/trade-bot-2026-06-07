@@ -10,7 +10,7 @@ wheels/
 .venv
 
 # データ(再取得可能・大容量)
-data/raw/
+data/raw
 data/*.log
 
 # バックテスト結果
