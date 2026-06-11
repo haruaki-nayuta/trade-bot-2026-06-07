@@ -1,0 +1,99 @@
+champ pool 1214 / grid 16117本
+
+=== overlay プール構築 ===
+  adx_trend_20_50_14_15        3089 trades (4s)
+  adx_trend_20_50_14_20        2461 trades (2s)
+  adx_trend_20_50_14_25        1789 trades (2s)
+  adx_trend_30_100_14_15       1753 trades (2s)
+  adx_trend_30_100_14_20       1557 trades (0s)
+  adx_trend_30_100_14_25       1283 trades (2s)
+  adx_trend_40_150_14_15       1258 trades (2s)
+  adx_trend_40_150_14_20       1177 trades (2s)
+  adx_trend_40_150_14_25       1039 trades (2s)
+  ma_cross_30_100              1849 trades (1s)
+  donchian_20_10               6000 trades (1s)
+
+=== 0. 参照 champ単独(robust s0) ===
+  champ mp11                                   emp k=11.51 CAGR=+23.83% p95=-29.6% wy= +6.2% | rob s0:+15.21%  (5s)
+  champ mp15                                   emp k=15.69 CAGR=+23.86% p95=-29.5% wy= +7.1% | rob s0:+15.29%  (5s)
+
+=== 1. adx 近傍9点 + 2. ファミリー交換(cushion mp15 g0.05 w1.0, rob s0) ===
+  cushion adx(20/50,th15)                      emp k=10.28 CAGR=+17.40% p95=-21.3% wy= -3.1% | rob s0:+11.02%  (6s)
+  cushion adx(20/50,th20)                      emp k=10.74 CAGR=+16.66% p95=-26.5% wy= +1.9% | rob s0:+14.53%  (6s)
+  cushion adx(20/50,th25)                      emp k=11.22 CAGR=+17.62% p95=-24.6% wy= -0.1% | rob s0:+15.21%  (6s)
+  cushion adx(30/100,th15)                     emp k=10.81 CAGR=+18.90% p95=-21.1% wy= +6.5% | rob s0:+16.85%  (6s)
+  cushion adx(30/100,th20)                     emp k=11.62 CAGR=+20.34% p95=-23.9% wy= +4.3% | rob s0:+17.14%  (6s)
+  cushion adx(30/100,th25)                     emp k=10.45 CAGR=+17.52% p95=-21.3% wy= +4.8% | rob s0:+16.31%  (6s)
+  cushion adx(40/150,th15)                     emp k=11.65 CAGR=+17.67% p95=-31.6% wy= +4.0% | rob s0:+14.19%  (6s)
+  cushion adx(40/150,th20)                     emp k=11.08 CAGR=+17.50% p95=-26.6% wy= +3.8% | rob s0:+14.28%  (6s)
+  cushion adx(40/150,th25)                     emp k=10.20 CAGR=+15.30% p95=-24.2% wy= +3.9% | rob s0:+15.29%  (6s)
+  cushion ma_cross(30/100)                     emp k=10.38 CAGR=+16.33% p95=-24.2% wy= -1.1% | rob s0:+16.69%  (6s)
+  cushion donchian(20/10)                      emp k= 8.40 CAGR=+13.14% p95=-20.2% wy= +3.3% | rob s0:+11.03%  (6s)
+
+=== 5. canonical(adx 30/100 th20) seeds 0..4 + robust-IS→OOSペア ===
+  cushion mp15 g0.05 w1.0 (canonical)          emp k=11.62 CAGR=+20.34% p95=-23.9% wy= +4.3% | rob s0:+17.14% s1:+16.85% s2:+18.12% s3:+17.00% s4:+16.50%  (18s)
+  canonical rob mean5=+17.12% | robust-IS k=10.32 OOS=+21.78% DD=-10.7% | baseline mp11 robust-IS k=7.95 OOS=+19.48% DD=-11.1%
+
+=== 3a. overlay発火の年次PnL分解(canonical, k=rob_k0) ===
+       n          pnl  pnl_frac  win_rate
+year                                     
+2017   2   148.994411  0.012277  1.000000
+2018   6   -87.852435 -0.006479  0.333333
+2020   8  -437.823690 -0.027168  0.375000
+2021   9  -195.888570 -0.010531  0.444444
+2022  38  3396.921660  0.183024  0.552632
+2023  14  2384.638856  0.080054  0.642857
+  IS期(<=2021): n=25 pnl_frac合計=-3.19% | 2022: n=38 pnl_frac=+18.30% | 2023以降: pnl_frac=+8.01%
+
+=== 3b. 2022除外: cushion vs champ(robust s0, 同一no-2022条件) ===
+  champ mp11 [no22]                            emp k=12.67 CAGR=+22.49% p95=-30.2% wy= +6.8% | rob s0:+14.00%  (5s)
+  champ mp15 [no22]                            emp k=17.28 CAGR=+22.60% p95=-30.2% wy= +7.8% | rob s0:+14.07%  (5s)
+  cushion mp15 g0.05 w1.0 [no22]               emp k=11.64 CAGR=+15.54% p95=-21.1% wy= +4.3% | rob s0:+13.33%  (5s)
+  champ mp11 [no22strict]                      emp k=12.67 CAGR=+22.49% p95=-30.2% wy= +6.8% | rob s0:+14.00%  (5s)
+  champ mp15 [no22strict]                      emp k=17.28 CAGR=+22.60% p95=-30.2% wy= +7.8% | rob s0:+14.07%  (5s)
+  cushion mp15 g0.05 w1.0 [no22strict]         emp k=11.64 CAGR=+15.52% p95=-21.1% wy= +3.1% | rob s0:+13.32%  (5s)
+
+=== 4. gate帯域 {0.045..0.065} (rob s0) ===
+  cushion mp15 g0.045 w1.0                     emp k=10.45 CAGR=+17.99% p95=-24.0% wy= +3.9% | rob s0:+17.16%  (6s)
+  cushion mp15 g0.05 w1.0                      emp k=11.62 CAGR=+20.34% p95=-23.9% wy= +4.3% | rob s0:+17.14%  (6s)
+  cushion mp15 g0.055 w1.0                     emp k=12.79 CAGR=+22.54% p95=-26.1% wy= +4.8% | rob s0:+16.85%  (6s)
+  cushion mp15 g0.06 w1.0                      emp k=15.39 CAGR=+27.74% p95=-29.6% wy= +4.2% | rob s0:+16.44%  (6s)
+  cushion mp15 g0.065 w1.0                     emp k=13.41 CAGR=+23.41% p95=-26.7% wy= +5.1% | rob s0:+16.20%  (5s)
+
+=== 6. mp外挿 mp17/mp19 (rob s0) ===
+  cushion mp17 g0.05 w1.0                      emp k=12.52 CAGR=+18.88% p95=-23.3% wy= +6.5% | rob s0:+17.16%  (5s)
+  cushion mp19 g0.05 w1.0                      emp k=13.99 CAGR=+18.88% p95=-23.3% wy= +6.5% | rob s0:+16.46%  (5s)
+
+saved -> /Users/yutootsuka/Documents/economy/.claude/worktrees/sweet-sanderson-079b7a/research/outputs/exp39_cushion_adversarial.csv
+ total 180s
+
+=== サマリ ===
+                               label     emp_k  emp_cagr   emp_p95  worst_year_emp  rob_cagr0  rob_mean5  oos_cagr
+                          champ mp11 11.509041  0.238252 -0.295830        0.062488   0.152144        NaN       NaN
+                          champ mp15 15.694145  0.238550 -0.294869        0.071325   0.152911        NaN       NaN
+             cushion adx(20/50,th15) 10.279746  0.174032 -0.212631       -0.030865   0.110212        NaN       NaN
+             cushion adx(20/50,th20) 10.738620  0.166579 -0.264726        0.019047   0.145319        NaN       NaN
+             cushion adx(20/50,th25) 11.220467  0.176223 -0.246025       -0.001232   0.152076        NaN       NaN
+            cushion adx(30/100,th15) 10.814620  0.189020 -0.211459        0.064636   0.168456        NaN       NaN
+            cushion adx(30/100,th20) 11.619150  0.203431 -0.239033        0.043428   0.171362        NaN       NaN
+            cushion adx(30/100,th25) 10.454769  0.175231 -0.213468        0.048415   0.163113        NaN       NaN
+            cushion adx(40/150,th15) 11.653539  0.176666 -0.316414        0.039616   0.141899        NaN       NaN
+            cushion adx(40/150,th20) 11.075991  0.174957 -0.266268        0.037973   0.142758        NaN       NaN
+            cushion adx(40/150,th25) 10.198629  0.153033 -0.241913        0.039363   0.152919        NaN       NaN
+            cushion ma_cross(30/100) 10.381925  0.163299 -0.242279       -0.010925   0.166868        NaN       NaN
+             cushion donchian(20/10)  8.404073  0.131423 -0.201664        0.032676   0.110303        NaN       NaN
+ cushion mp15 g0.05 w1.0 (canonical) 11.619150  0.203431 -0.239033        0.043428   0.171362   0.171221  0.217752
+             champ mp11 (paired oos)       NaN       NaN       NaN             NaN        NaN        NaN  0.194820
+                   champ mp11 [no22] 12.673027  0.224854 -0.302077        0.068279   0.140011        NaN       NaN
+                   champ mp15 [no22] 17.281404  0.225973 -0.301809        0.078072   0.140712        NaN       NaN
+      cushion mp15 g0.05 w1.0 [no22] 11.644043  0.155395 -0.211500        0.043406   0.133326        NaN       NaN
+             champ mp11 [no22strict] 12.673027  0.224854 -0.302077        0.068279   0.140011        NaN       NaN
+             champ mp15 [no22strict] 17.281404  0.225973 -0.301809        0.078072   0.140712        NaN       NaN
+cushion mp15 g0.05 w1.0 [no22strict] 11.644043  0.155226 -0.211500        0.031479   0.133178        NaN       NaN
+            cushion mp15 g0.045 w1.0 10.447851  0.179886 -0.239616        0.039254   0.171552        NaN       NaN
+             cushion mp15 g0.05 w1.0 11.619150  0.203431 -0.239033        0.043428   0.171362        NaN       NaN
+            cushion mp15 g0.055 w1.0 12.792570  0.225380 -0.260631        0.047560   0.168515        NaN       NaN
+             cushion mp15 g0.06 w1.0 15.390357  0.277404 -0.295617        0.041608   0.164379        NaN       NaN
+            cushion mp15 g0.065 w1.0 13.411208  0.234072 -0.266506        0.050809   0.161955        NaN       NaN
+             cushion mp17 g0.05 w1.0 12.515750  0.188765 -0.232863        0.065102   0.171575        NaN       NaN
+             cushion mp19 g0.05 w1.0 13.988195  0.188765 -0.232863        0.065102   0.164650        NaN       NaN

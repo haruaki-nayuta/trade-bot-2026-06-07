@@ -1,0 +1,56 @@
+champ pool 1214 / overlay pool 1557 / grid 16117本
+fbar(P): P2.0=1.0983, P3.0=1.1644, P3.5=1.1954, P4.0=1.2228
+
+=== 合成グリッド(P × cushion w, mp15 g0.05) stage1 ===
+  combo P2.0 w0.5                    emp k=13.57 CAGR=+21.56% p95=-25.3% wy= +8.6% | rob s0 k=10.67 CAGR=+17.27%  (5s)
+  combo P2.0 w1.0                    emp k=11.62 CAGR=+20.34% p95=-23.9% wy= +4.3% | rob s0 k=10.02 CAGR=+17.14%  (5s)
+  combo P3.0 w0.5                    emp k=14.43 CAGR=+24.04% p95=-26.5% wy= +6.2% | rob s0 k=10.78 CAGR=+17.89%  (5s)
+  combo P3.0 w1.0                    emp k=11.55 CAGR=+20.56% p95=-23.3% wy= +3.4% | rob s0 k=10.15 CAGR=+18.09%  (5s)
+  combo P3.5 w0.5                    emp k=14.96 CAGR=+25.26% p95=-26.6% wy= +6.5% | rob s0 k=10.98 CAGR=+18.91%  (5s)
+  combo P3.5 w1.0                    emp k=11.68 CAGR=+21.38% p95=-24.3% wy= +3.2% | rob s0 k=10.34 CAGR=+19.69%  (5s)
+  combo P4.0 w0.5                    emp k=17.39 CAGR=+30.55% p95=-29.4% wy= +8.3% | rob s0 k=11.22 CAGR=+19.46%  (5s)
+  combo P4.0 w1.0                    emp k=15.47 CAGR=+30.91% p95=-27.7% wy= +7.2% | rob s0 k=10.68 CAGR=+19.34%  (5s)
+
+=== 診断: P4 単独(クッション無し) ===
+  champ-only P4.0 mp15               emp k=16.57 CAGR=+27.64% p95=-29.3% wy= +5.4% | rob s0 k=10.93 CAGR=+17.63%  (5s)
+  champ-only P4.0 mp11               emp k=12.15 CAGR=+27.63% p95=-29.3% wy= +4.7% | rob s0 k= 8.01 CAGR=+17.61%  (5s)
+
+=== stage2(5シード): combo P3.5 w1.0, combo P4.0 w0.5, combo P4.0 w1.0 ===
+  combo P3.5 w1.0                    seeds +19.69%/+19.89%/+20.16%/+19.62%/+19.59%  mean3=+19.91% mean5=+19.79%
+  combo P4.0 w0.5                    seeds +19.46%/+19.57%/+19.57%/+19.57%/+19.19%  mean3=+19.53% mean5=+19.47%
+  combo P4.0 w1.0                    seeds +19.34%/+19.34%/+19.34%/+19.34%/+19.34%  mean3=+19.34% mean5=+19.34%
+
+=== 筆頭フル検査: combo P3.5 w1.0 ===
+  (a) emp k=11.68 CAGR=+21.38% p95(1500)=-23.8% p99=-27.5% (基準 emp +23.83% / p95 -29.4%) → 署名=クリーン
+  (b) robust k0=10.34 CAGR=+19.69% 最悪年=+4.0% プラス年率=100%
+      年次: 2016:+13.0% 2017:+20.4% 2018:+8.7% 2019:+17.2% 2020:+12.6% 2021:+4.0% 2022:+54.6% 2023:+29.1% 2024:+18.9% 2025:+18.3% 2026:+5.8%
+  (c) robust-IS較正→OOS素検証
+      champ mp11 (基準)              k_is= 7.95 OOS CAGR=+19.48% DD=-11.1% p95=-18.2%
+      combo P3.5 w1.0              k_is=10.88 OOS CAGR=+23.91% DD=-10.4% p95=-16.6%
+  (d) ブロック長感応(robust seed0)
+      block=  21  k= 9.51  CAGR=+17.08%
+      block=  63  k=10.34  CAGR=+19.69%
+      block= 126  k=10.88  CAGR=+20.98%
+  (e) k*±5% の p95 滑らかさ
+      k= 9.827 p95 s0=-19.1% s1=-18.4% s2=-18.7% | DD=-11.7% CAGR=+17.58%
+      k=10.344 p95 s0=-20.0% s1=-19.8% s2=-19.5% | DD=-11.1% CAGR=+19.69%
+      k=10.861 p95 s0=-21.1% s1=-20.6% s2=-20.2% | DD=-11.7% CAGR=+20.94%
+
+=== 相互作用: 合成改善幅(mean3)=+4.93pp vs 単独和=+4.62pp → 超加法 ===
+
+saved -> /Users/yutootsuka/Documents/economy/.claude/worktrees/sweet-sanderson-079b7a/research/outputs/exp40_combo.csv
+      -> /Users/yutootsuka/Documents/economy/.claude/worktrees/sweet-sanderson-079b7a/research/outputs/exp40_combo.json
+ total 85s
+
+=== サマリ(robust 降順) ===
+               label     emp_k  emp_cagr   emp_p95  rob_cagr0  rob_mean3  rob_mean5  worst_year_emp
+     combo P3.5 w1.0 11.681285  0.213799 -0.242574   0.196881   0.199107   0.197892        0.032124
+     combo P4.0 w0.5 17.386082  0.305514 -0.294007   0.194645   0.195329   0.194712        0.083065
+     combo P4.0 w1.0 15.470211  0.309054 -0.277134   0.193445   0.193445   0.193445        0.072055
+     combo P3.5 w0.5 14.955027  0.252646 -0.266068   0.189140        NaN        NaN        0.064618
+     combo P3.0 w1.0 11.552658  0.205560 -0.233081   0.180915        NaN        NaN        0.033800
+     combo P3.0 w0.5 14.428191  0.240375 -0.265074   0.178892        NaN        NaN        0.062216
+champ-only P4.0 mp15 16.569146  0.276405 -0.293334   0.176331        NaN        NaN        0.053681
+champ-only P4.0 mp11 12.150708  0.276279 -0.293366   0.176137        NaN        NaN        0.046886
+     combo P2.0 w0.5 13.567055  0.215606 -0.253044   0.172736        NaN        NaN        0.085998
+     combo P2.0 w1.0 11.619150  0.203431 -0.239033   0.171362        NaN        NaN        0.043428

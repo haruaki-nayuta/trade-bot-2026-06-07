@@ -1,0 +1,21 @@
+=== A. gate 高原性(mp15) ===
+  cushion mp15 g0.03 w0.5              emp k=10.50 CAGR=+15.50% p95=-21.7% wy= -1.1% | rob s0 k=10.08 CAGR=+15.08%  (6s)
+  cushion mp15 g0.065 w0.5             emp k=17.13 CAGR=+28.01% p95=-30.3% wy= +8.4% | rob s0 k=10.42 CAGR=+16.19%  (5s)
+  cushion mp15 g0.03 w1.0              emp k=12.08 CAGR=+22.18% p95=-29.7% wy= +3.8% | rob s0 k=6.95 CAGR=+11.90%  (6s)
+  cushion mp15 g0.065 w1.0             emp k=13.41 CAGR=+23.41% p95=-26.7% wy= +5.1% | rob s0 k=10.02 CAGR=+16.20%  (5s)
+
+=== B. 純クッション stage2(seeds 1,2) ===
+  cushion mp15 g0.05 w0.5        s0=+17.27% s1=+17.27% s2=+17.27% mean3=+17.27%
+  cushion mp15 g0.05 w1.0        s0=+17.14% s1=+16.85% s2=+18.12% mean3=+17.37%
+  cushion mp13 g0.05 w1.0        s0=+16.96% s1=+16.68% s2=+17.05% mean3=+16.90%
+
+=== C. 純クッション IS較正→OOS素検証 ===
+  cushion mp15 g0.05 w0.5        k_is=13.57 OOS CAGR=+28.74% DD=-13.5% ovlN=45 ovlPnL=+17.83%
+  cushion mp15 g0.05 w1.0        k_is=11.62 OOS CAGR=+24.34% DD=-11.5% ovlN=27 ovlPnL=+16.69%
+
+=== D. 検証 boot(n=1500, seed0)と robust k 年次 ===
+  cushion mp15 g0.05 w0.5                      emp p95(1500)=-25.2% | rob k=10.67 CAGR=+17.27% worst_yr=+4.5%
+  cushion mp15 g0.05 w1.0                      emp p95(1500)=-23.4% | rob k=10.02 CAGR=+17.14% worst_yr=+3.9%
+  cushion mp15 g0.05 w1.0 +usd th0.35 g0.5     emp p95(1500)=-23.2% | rob k=10.27 CAGR=+18.13% worst_yr=+3.5%
+
+saved -> /Users/yutootsuka/Documents/economy/.claude/worktrees/sweet-sanderson-079b7a/research/outputs/exp36b_followup.json
