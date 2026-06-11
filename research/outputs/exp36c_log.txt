@@ -1,0 +1,11 @@
+  k=10.457 p95 s0=-19.6% s1=-19.7% s2=-19.6% | DD=-12.3% CAGR=+16.55%
+  k=10.671 p95 s0=-19.4% s1=-19.8% s2=-19.7% | DD=-12.5% CAGR=+17.27%
+  k=10.884 p95 s0=-20.1% s1=-20.5% s2=-20.1% | DD=-12.8% CAGR=+17.44%
+
+=== robust(p95=20%, seed0) IS較正 → OOS素検証 ===
+  champ mp11                                   k_is= 7.95 OOS CAGR=+19.48% DD=-11.1% p95=-18.2%
+  cushion mp15 g0.05 w0.5                      k_is=11.14 OOS CAGR=+22.02% DD=-11.3% p95=-18.3%
+  cushion mp15 g0.05 w1.0                      k_is=10.32 OOS CAGR=+21.78% DD=-10.7% p95=-16.9%
+  cushion mp15 g0.05 w1.0 +usd th0.35 g0.5     k_is=10.93 OOS CAGR=+23.42% DD=-11.2% p95=-17.3%
+
+saved -> /Users/yutootsuka/Documents/economy/.claude/worktrees/sweet-sanderson-079b7a/research/outputs/exp36c_oos_paired.json

@@ -1,0 +1,20 @@
+pool 1214 trades / grid 16117 bars / mp=11
+[sanity] gamma=inf vs mm.simulate: MtM一致=True 実現一致=True CAGR=+23.83% (期待 +23.8%)
+
+=== 段階1: empirical + boot p95(seed0) + robust seed0 + IS/OOS ===
+  baseline       emp k=11.51 CAGR=+23.83% p95=-29.6% worst年= +6.2% | rob s0 k= 7.57 CAGR=+15.21% | OOS=+32.50% DD=-17.4% | cap: 縮小0件(平均xnan) 見送り0件 [2s]
+  USD g=1.0      emp k=12.54 CAGR=+19.63% p95=-29.1% worst年= +2.1% | rob s0 k= 8.33 CAGR=+12.79% | OOS=+21.68% DD=-16.9% | cap: 縮小176件(平均x0.47) 見送り105件 [2s]
+  USD g=1.5      emp k=11.86 CAGR=+19.63% p95=-28.4% worst年= +2.2% | rob s0 k= 8.05 CAGR=+13.07% | OOS=+23.78% DD=-17.1% | cap: 縮小136件(平均x0.60) 見送り79件 [2s]
+  USD g=2.0      emp k=11.54 CAGR=+19.74% p95=-29.0% worst年= +2.9% | rob s0 k= 7.69 CAGR=+12.90% | OOS=+25.25% DD=-17.1% | cap: 縮小82件(平均x0.43) 見送り40件 [2s]
+  USD g=3.0      emp k=11.51 CAGR=+21.71% p95=-29.5% worst年= +3.6% | rob s0 k= 7.61 CAGR=+14.01% | OOS=+29.12% DD=-17.3% | cap: 縮小39件(平均x0.50) 見送り14件 [2s]
+  ALL g=1.0      emp k=25.87 CAGR=+22.49% p95=-35.8% worst年= -3.3% | rob s0 k=13.49 CAGR=+11.57% | OOS=+28.01% DD=-19.0% | cap: 縮小562件(平均x0.44) 見送り272件 [2s]
+  ALL g=1.5      emp k=14.81 CAGR=+16.69% p95=-27.8% worst年= -3.2% | rob s0 k=10.22 CAGR=+11.42% | OOS=+26.23% DD=-19.8% | cap: 縮小480件(平均x0.58) 見送り193件 [2s]
+  ALL g=2.0      emp k=12.17 CAGR=+16.44% p95=-27.3% worst年= -1.1% | rob s0 k= 8.72 CAGR=+11.71% | OOS=+22.56% DD=-17.3% | cap: 縮小283件(平均x0.52) 見送り113件 [2s]
+  ALL g=3.0      emp k=11.27 CAGR=+19.61% p95=-27.6% worst年= +1.2% | rob s0 k= 7.88 CAGR=+13.50% | OOS=+27.38% DD=-17.8% | cap: 縮小120件(平均x0.54) 見送り42件 [2s]
+
+=== 段階2: seeds 1,2 追加(対象 0 構成) ===
+  全構成 robust seed0 < +15.6% -> 早期終了(reject)
+
+saved -> /Users/yutootsuka/Documents/economy/.claude/worktrees/sweet-sanderson-079b7a/research/outputs/exp35_currency_netting.csv
+saved -> /Users/yutootsuka/Documents/economy/.claude/worktrees/sweet-sanderson-079b7a/research/outputs/exp35_currency_netting.json
+DONE
