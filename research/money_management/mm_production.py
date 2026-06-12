@@ -10,6 +10,15 @@ Workflow(13エージェント・10手法)+ リーク無し自前再検証(mm_syn
   ・単一エントリー・分割しない(ナンピン非該当)。f̄ で正規化し総量は k のみで制御。
   ・**完全に因果**(エントリー時点の値のみ。先読み無し)。max_pos で分散を増やし1玉を縮小。
 
+エントリー1バー遅延 d1 の採用(2026-06-12, exp47/51/52/53, reports/18): プールの既定を
+  **confluence_meanrev_v2_d1**(シグナルの次バー close で建玉、遅延先で z が exit 域なら見送り)に更新。
+  逆行第1波を建玉前に外すことで robust(p95=20%較正) mp8 **+16.41%→+18.63%** / empirical
+  **+24.64%→+27.50%**、p95 は -27.8→-27.3% と改善(=レバ偽装でない)。敵対検証3本
+  (独立再実装一致 / M1粒度谷比1.05でゲート通過 / 近傍OAT 10/10正+固定kでもDD・p95とも浅い)全通過。
+  ※ **d≥2 は禁止**(d2=2020単年依存88%+レバ偽装署名、d3=最良年除外で符号反転。IS-argmax は d3 を
+    選ぶがゲートで死ぬ=P>4.5禁止と同型の線引き)。旧 d0 プールは --legacy-d0 で再現可。
+  ※ M1粒度監査の掛け目は d1 構成で **k×0.955**(exp52。d0 の×0.965 より約1pp 深い)。
+
 指数 P の再較正(2026-06-11, exp37/exp38, reports/14): P=2.0 → **4.0** に更新。
   深い乖離ほど期待リターンが大きい勾配は P=2 では刈り取り切れておらず、P を上げると robust
   (ブートp95=20%較正)CAGR が単調改善する(mp11 5シード平均 +15.0%→+17.4%、empirical 20% でも
@@ -27,12 +36,13 @@ Workflow(13エージェント・10手法)+ リーク無し自前再検証(mm_syn
   ・per-instrument ケリー = 見かけ +9pp だが**ほぼ全部が重みの先読み(リーク)**。因果(WF)版は ≈ベースライン。
   ・乖離連動z だけが「リーク無し・テール中立・高原頑健」で両DD解釈下でベースラインを +36% 相対で上回る。
 
-DD≤20% の2解釈(--dd-mode で選択)。数値は P=4.0 更新後(括弧内は旧P=2.0):
+DD≤20% の2解釈(--dd-mode で選択)。数値は d1+P=4.0 更新後(括弧内は d0 時代):
   empirical : 経験的(単一バックテストパス)MtM最大DD = 20%。最も攻めた利益。
-              mp8 k≈8.3 → CAGR≈+24.6%(旧+21.6%)/ mp11 k≈12.2 → +27.6%(旧+23.8%)。
+              mp8 k≈8.9 → CAGR≈+27.5%(d0 +24.6%)。
   robust    : ブートストラップ理論DD(p95, 20回に1回級)= 20%。テール自体を縛る保守解。
-              mp8 → CAGR≈+16.3%(旧+14.3%)/ mp11 → +17.2〜17.4%(旧+15.0%)。
-  ※ empirical で20%に張ると理論テール(p95)は約-28〜-29%。「経験20%=理論テール28%」を運用前提とせよ。
+              mp8 → CAGR≈+18.6%(d0 +16.4%、5シード平均)。
+  ※ empirical で20%に張ると理論テール(p95)は約-27〜-28%。「経験20%=理論テール28%」を運用前提とせよ。
+  ※ mp11 は reject 確定(reports/16 exp44: M1粒度で実効CAGR逆転)。mp8 を維持する。
 
 実行:
   uv run python mm_production.py                          # 推奨: mp8, empirical 20%
@@ -59,6 +69,50 @@ CLIP_LO, CLIP_HI = 0.3, 3.0
 
 def _fz(z):
     return float(np.clip((z / Z0) ** P, CLIP_LO, CLIP_HI)) if np.isfinite(z) else 1.0
+
+
+def build_pool_d1(tf="H4", instruments=None, cross_spread=3.0, cache=True):
+    """d1(エントリー1バー遅延)戦略のトレードプール(mm_lab.build_pool と同形式)。
+
+    z_entry は **シグナルバー(=エントリーバーの1本前)時点の |z|**。検証済み構成
+    (exp47/51)と同じ規約: サイジングはシグナル時点の乖離の深さで決める(因果)。
+    """
+    from fxlab import config, universe as uni
+    from fxlab.backtest import run
+    from fxlab.trades import trade_table
+    from strategies.confluence_meanrev_v2_d1 import PARAMS, generate_signals
+
+    uni.register_cross_spreads(cross_spread)
+    instruments = instruments or mm.default_instruments()
+    cache_path = config.RESULTS_DIR / f"mm_pool_v2d1_{tf}_{len(instruments)}.parquet"
+    if cache and cache_path.exists():
+        return pd.read_parquet(cache_path)
+    win = PARAMS["window"]
+    frames = []
+    for nm in instruments:
+        data = uni.instrument_data(nm, tf)
+        pf = run(nm, tf, generate_signals, dict(PARAMS), data=data, size_mode="value")
+        tt = trade_table(pf, data)
+        if tt.empty:
+            continue
+        close = data["close"]
+        z_sig = ((close - close.rolling(win).mean()) / close.rolling(win).std()).shift(1)
+        vol_sig = close.pct_change().rolling(20).std().shift(1)
+        frames.append(pd.DataFrame({
+            "instr": nm,
+            "entry": tt["entry"].to_numpy(),
+            "exit": tt["exit"].to_numpy(),
+            "dir": np.where(tt["dir"].to_numpy() == "Long", 1, -1),
+            "entry_price": tt["entry_price"].to_numpy(),
+            "ret": tt["return_pct"].to_numpy() / 100.0,
+            "bars_held": tt["bars_held"].to_numpy(),
+            "z_entry": np.abs(z_sig.reindex(tt["entry"]).to_numpy()),
+            "vol_entry": vol_sig.reindex(tt["entry"]).to_numpy(),
+        }))
+    pool = pd.concat(frames, ignore_index=True).sort_values("entry").reset_index(drop=True)
+    if cache:
+        pool.to_parquet(cache_path)
+    return pool
 
 
 def champion_sizing(pool, max_pos=8):
@@ -96,10 +150,13 @@ def main() -> int:
     ap.add_argument("--dd-mode", choices=["empirical", "robust"], default="empirical",
                     help="empirical=経験的MtM最大DD / robust=ブート理論DD(p95)")
     ap.add_argument("--init", type=float, default=10_000.0)
+    ap.add_argument("--legacy-d0", action="store_true",
+                    help="旧: 遅延なし(v2 素)のプールで評価(reports/18 以前の挙動)")
     args = ap.parse_args()
 
-    print(f"=== チャンピオンv2 本番資金管理 (max_pos={args.max_pos}) ===")
-    pool = mm.build_pool()
+    tag = "v2(d0)" if args.legacy_d0 else "v2_d1(エントリー1バー遅延)"
+    print(f"=== チャンピオン{tag} 本番資金管理 (max_pos={args.max_pos}) ===")
+    pool = mm.build_pool() if args.legacy_d0 else build_pool_d1()
     closes = mm.load_closes()
     print(f"トレード {len(pool)}(年{len(pool)/11:.0f}) / グリッド {len(closes)}本")
 
