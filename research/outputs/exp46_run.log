@@ -1,0 +1,139 @@
+=== exp46: phase harvest (H4 offsets [0, 1, 2, 3], 19銘柄, mp8, champion_sizing P=4.0) ===
+
+  G0: raw n=1214 sum=+1.9086 PF=1.707 | decon n=1214 sum=+1.9086 PF=1.707 [0s]
+  G1: raw n=1209 sum=+1.8571 PF=1.729 | decon n=1118 sum=+1.6260 PF=1.656 [0s]
+  G2: raw n=1244 sum=+1.7341 PF=1.604 | decon n=1167 sum=+1.5707 PF=1.569 [0s]
+  G3: raw n=1234 sum=+1.7425 PF=1.617 | decon n=1164 sum=+1.5202 PF=1.558 [0s]
+
+  [検算1] G0 vs ベース参照: n一致=True sum一致(<1e-6)=True max|Δret|=0.00e+00 max|Δz|=0.00e+00 raw==decon=True
+  [検算2] G2 raw n=1244 (期待1244) sum=+1.7341 (期待+1.7341) -> OK
+
+=== 2. プールレベル(統合) ===
+         pool    n  sum_ret  mean_bps    win    pf  pos_years  n_years  worst_year  era_16_21  era_22_26  med_hold
+       G0_raw 1214    1.909     15.72 0.7002 1.707         11       11     0.09251      0.901      1.008        18
+     G0_decon 1214    1.909     15.72 0.7002 1.707         11       11     0.09251      0.901      1.008        18
+       G1_raw 1209    1.857     15.36 0.7022 1.729         10       11    -0.04883     0.9321     0.9251        18
+     G1_decon 1118    1.626     14.54 0.7004 1.656         10       11    -0.04019     0.7559     0.8701        18
+       G2_raw 1244    1.734     13.94  0.701 1.604          9       11   -0.004403     0.8526     0.8815        18
+     G2_decon 1167    1.571     13.46 0.6915 1.569          9       11    -0.01639     0.7349     0.8357        19
+       G3_raw 1234    1.743     14.12 0.7123 1.617         11       11     0.01151     0.8287     0.9139        18
+     G3_decon 1164     1.52     13.06 0.7036 1.558         10       11   -0.006469     0.6977     0.8226        19
+        V_all 1846    2.344      12.7 0.6956 1.538         11       11     0.08625      1.121      1.223        19
+         V_02 1574    2.222     14.12 0.6982 1.615         11       11     0.04753      1.045      1.177        19
+V_all_nodecon 1894    2.383     12.58 0.6985 1.537         11       11     0.07495      1.236      1.146        18
+
+--- displacement 構成 (V_all) ---
+  base_n                  : 1214
+  survived_base_n         : 457
+  displaced_n             : 757
+  displaced_sum           : +1.4426
+  blockers_n              : 743
+  blockers_sum            : -0.0388
+  displacement_pnl_diff   : -1.4813
+  unique_add_n            : 646
+  unique_add_sum          : +1.9165
+  union_n                 : 1846
+  union_sum               : +2.3437
+--- displacement 構成 (V_02) ---
+  base_n                  : 1214
+  survived_base_n         : 819
+  displaced_n             : 395
+  displaced_sum           : +1.0301
+  blockers_n              : 389
+  blockers_sum            : +0.2132
+  displacement_pnl_diff   : -0.8168
+  unique_add_n            : 366
+  unique_add_sum          : +1.1301
+  union_n                 : 1574
+  union_sum               : +2.2219
+
+  [負の知見] V_all 除染なし sum=+2.3826 vs 除染後 +2.3437 -> アーティファクト水増し +1.7% (n: 1894 vs 1846)
+  V_all provenance 構成: {0: 457, 1: 473, 2: 457, 3: 459}
+
+=== 3. 口座シミュ ステージ1 (seed0) === grid 16117本
+  G1_solo                            emp k= 7.94 CAGR=+17.48% p95=-35.3% | robust mean= +8.99% (s0:+8.99%)
+      skip: 5/1118 (0.4%) max_conc=8 avg=2.89 年間取引 111
+    [5s]
+  G2_solo                            emp k= 6.48 CAGR=+14.70% p95=-28.6% | robust mean= +9.96% (s0:+9.96%)
+      skip: 9/1167 (0.8%) max_conc=8 avg=3.00 年間取引 116
+    [10s]
+  G3_solo                            emp k= 9.59 CAGR=+21.88% p95=-36.0% | robust mean=+10.93% (s0:+10.93%)
+      skip: 7/1164 (0.6%) max_conc=8 avg=2.96 年間取引 116
+    [15s]
+
+=== 4. ステージ2: seeds (0, 1, 2, 3, 4) フル評価 ===
+  V_base                             emp k= 8.27 CAGR=+24.64% p95=-27.8% | robust mean=+16.41% (s0:+16.40% s1:+16.41% s2:+16.12% s3:+16.73% s4:+16.39%)
+      skip: 12/1214 (1.0%) max_conc=8 avg=2.99 年間取引 120
+      IS emp k= 9.65 ISC=+24.05% -> OOS +35.95% (DD -16.5%) | IS rob k= 5.95 ISC=+14.46% -> OOS +21.04% (DD -10.4%)
+    [30s]
+  V_all                              emp k= 5.21 CAGR=+18.13% p95=-29.1% | robust mean=+11.88% (s0:+11.62% s1:+11.90% s2:+12.06% s3:+12.18% s4:+11.67%)
+      skip: 48/1846 (2.6%) max_conc=8 avg=3.80 年間取引 180
+      IS emp k= 5.21 ISC=+15.42% -> OOS +21.66% (DD -15.7%) | IS rob k= 3.52 ISC=+10.27% -> OOS +14.26% (DD -10.7%)
+    [46s]
+  V_02                               emp k= 6.30 CAGR=+20.54% p95=-28.2% | robust mean=+13.78% (s0:+13.85% s1:+13.34% s2:+13.94% s3:+14.29% s4:+13.48%)
+      skip: 28/1574 (1.8%) max_conc=8 avg=3.48 年間取引 155
+      IS emp k= 6.30 ISC=+16.80% -> OOS +25.45% (DD -14.8%) | IS rob k= 4.20 ISC=+11.03% -> OOS +16.42% (DD -10.0%)
+    [62s]
+
+--- ベースライン再現チェック (参照: rob_mean +16.41% / emp +24.64%) ---
+  V_base rob_mean=+16.41% emp=+24.64% p95=-27.8%
+
+--- ペアシード robust(p95=20%) CAGR 比較(同一シード集合) ---
+  seed | V_base | V_all (diff) | V_02 (diff)
+   s0  | +16.40% | +11.62% (-4.78pp) | +13.85% (-2.55pp)
+   s1  | +16.41% | +11.90% (-4.51pp) | +13.34% (-3.07pp)
+   s2  | +16.12% | +12.06% (-4.06pp) | +13.94% (-2.18pp)
+   s3  | +16.73% | +12.18% (-4.55pp) | +14.29% (-2.44pp)
+   s4  | +16.39% | +11.67% (-4.72pp) | +13.48% (-2.91pp)
+  mean | +16.41% | +11.88% (-4.52pp) | +13.78% (-2.63pp)
+  empirical: base +24.64% (p95 -27.8%) | V_all +18.13% (p95 -29.1%) | V_02 +20.54% (p95 -28.2%)
+
+=== 5. 判定ゲート ===
+
+  [V_all] rob_mean +11.88% (rel -27.6%)
+    G1 +10%相対(≥18.05%): False (部分的前進≥17.2%: False)
+    G2 レバ偽装署名なし: True (emp +18.13% vs base +24.64%, p95 -29.1% vs -27.8%)
+    G3 OOS優位持続: False (rob -6.78pp / emp -14.29pp)
+    G4 全年プラス: True (neg emp=0 rob0=0)
+    G5 単年依存なし: False (emp: 最良年2025 残存nan% 2022除外-54.80% | rob0: 残存nan% 2022除外-40.82%)
+    G6 skip_rate=2.6% max_conc=8
+    => ALL PASS: False
+
+  [V_02] rob_mean +13.78% (rel -16.0%)
+    G1 +10%相対(≥18.05%): False (部分的前進≥17.2%: False)
+    G2 レバ偽装署名なし: True (emp +20.54% vs base +24.64%, p95 -28.2% vs -27.8%)
+    G3 OOS優位持続: False (rob -4.62pp / emp -10.50pp)
+    G4 全年プラス: True (neg emp=0 rob0=0)
+    G5 単年依存なし: False (emp: 最良年2025 残存nan% 2022除外-39.05% | rob0: 残存nan% 2022除外-24.61%)
+    G6 skip_rate=1.8% max_conc=8
+    => ALL PASS: False
+
+  V_all - V_base 年次差分 [emp]: 2016:-5.3%  2017:-4.3%  2018:-7.8%  2019:-7.5%  2020:-10.6%  2021:+6.3%  2022:-9.0%  2023:-16.9%  2024:-16.1%  2025:+12.9%  2026:-5.5%
+
+  V_all - V_base 年次差分 [rob0]: 2016:-3.8%  2017:-3.7%  2018:-5.4%  2019:-5.4%  2020:-7.4%  2021:+4.0%  2022:-6.5%  2023:-11.3%  2024:-10.8%  2025:+6.8%  2026:-3.8%
+
+  V_02 - V_base 年次差分 [emp]: 2016:+1.5%  2017:-5.0%  2018:-2.5%  2019:-4.5%  2020:-10.0%  2021:-0.5%  2022:-1.2%  2023:-10.9%  2024:-12.3%  2025:+7.0%  2026:-1.8%
+
+  V_02 - V_base 年次差分 [rob0]: 2016:+1.1%  2017:-3.2%  2018:-1.6%  2019:-2.8%  2020:-6.5%  2021:-0.3%  2022:-0.5%  2023:-7.0%  2024:-7.8%  2025:+4.6%  2026:-1.1%
+
+=== 6. 位相単独監査 (seed0, 除染済み) ===
+  位相  n     emp_cagr   rob_s0    (V_base rob_s0: +16.40%)
+  G1_solo: n=1118 emp=+17.48% rob_s0=+8.99% neg_years_emp=1
+  G2_solo: n=1167 emp=+14.70% rob_s0=+9.96% neg_years_emp=1
+  G3_solo: n=1164 emp=+21.88% rob_s0=+10.93% neg_years_emp=1
+
+saved -> /Users/yutootsuka/Documents/economy/.claude/worktrees/upbeat-sinoussi-d20a57/research/outputs/exp46_pools.csv
+      -> /Users/yutootsuka/Documents/economy/.claude/worktrees/upbeat-sinoussi-d20a57/research/outputs/exp46_account.csv
+      -> /Users/yutootsuka/Documents/economy/.claude/worktrees/upbeat-sinoussi-d20a57/research/outputs/exp46_result.json
+      -> /Users/yutootsuka/Documents/economy/.claude/worktrees/upbeat-sinoussi-d20a57/results/mm_pool_v2_phase_all_H4_19.parquet
+
+=== 口座レベル最終表 ===
+  label  n_pool  emp_k  emp_cagr  emp_dd  emp_p95  rob_s0  rob_s1  rob_s2  rob_s3  rob_s4  rob_mean  neg_years_emp  neg_years_rob0  worst_year_emp  skip_rate  max_conc  trades_per_year  k_is_emp  is_emp_cagr  oos_emp_cagr  oos_emp_dd  k_is_rob  is_rob_cagr  oos_rob_cagr  oos_rob_dd
+G1_solo    1118 7.9391    0.1748 -0.2000  -0.3526  0.0899     NaN     NaN     NaN     NaN    0.0899              1               1         -0.0500     0.0045         8         111.3457       NaN          NaN           NaN         NaN       NaN          NaN           NaN         NaN
+G2_solo    1167 6.4817    0.1470 -0.2000  -0.2860  0.0996     NaN     NaN     NaN     NaN    0.0996              1               1         -0.0442     0.0077         8         115.8476       NaN          NaN           NaN         NaN       NaN          NaN           NaN         NaN
+G3_solo    1164 9.5873    0.2188 -0.2000  -0.3596  0.1093     NaN     NaN     NaN     NaN    0.1093              1               1         -0.0958     0.0060         8         115.7475       NaN          NaN           NaN         NaN       NaN          NaN           NaN         NaN
+ V_base    1214 8.2693    0.2464 -0.2000  -0.2784  0.1640  0.1641  0.1612  0.1673  0.1639    0.1641              0               0          0.0179     0.0099         8         120.2494    9.6464       0.2405        0.3595     -0.1651    5.9535       0.1446        0.2104     -0.1041
+  V_all    1846 5.2149    0.1813 -0.2000  -0.2912  0.1162  0.1190  0.1206  0.1218  0.1167    0.1188              0               0          0.0371     0.0260         8         179.8739    5.2149       0.1542        0.2166     -0.1571    3.5242       0.1027        0.1426     -0.1073
+   V_02    1574 6.3033    0.2054 -0.2000  -0.2823  0.1385  0.1334  0.1394  0.1429  0.1348    0.1378              0               0          0.0133     0.0178         8         154.6635    6.3033       0.1680        0.2545     -0.1479    4.2013       0.1103        0.1642     -0.1000
+
+総経過 62s

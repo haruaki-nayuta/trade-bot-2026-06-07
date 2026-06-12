@@ -1,0 +1,3 @@
+comparison,n_mine,n_exp47,n_common,match_rate,n_only_mine,n_only_exp47,sum_mine,sum_exp47,sum_diff,ret_diff_mean,ret_diff_median,ret_diff_maxabs,ret_diff_sum,z_entry_diff_maxabs,sum_only_mine,sum_only_exp47
+base_fresh_vs_cached,1214,1214,1214,1.0,0,0,1.908585105233095,1.908585105233095,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+d1_mine_vs_exp47,1207,1207,1207,1.0,0,0,1.9622098170096924,1.96224087528572,-3.1058276027673415e-05,-2.5731794555071936e-08,-1.3392629458989364e-08,5.753846923527671e-06,-3.105827602797183e-05,0.0,0.0,0.0

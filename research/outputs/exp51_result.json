@@ -1,0 +1,215 @@
+{
+  "base_rebuild": {
+    "n_mine": 1214,
+    "n_exp47": 1214,
+    "n_common": 1214,
+    "match_rate": 1.0,
+    "n_only_mine": 0,
+    "n_only_exp47": 0,
+    "sum_mine": 1.908585105233095,
+    "sum_exp47": 1.908585105233095,
+    "sum_diff": 0.0,
+    "ret_diff_mean": 0.0,
+    "ret_diff_median": 0.0,
+    "ret_diff_maxabs": 0.0,
+    "ret_diff_sum": 0.0,
+    "z_entry_diff_maxabs": 0.0,
+    "sum_only_mine": 0.0,
+    "sum_only_exp47": 0.0
+  },
+  "d1_pool_compare": {
+    "n_mine": 1207,
+    "n_exp47": 1207,
+    "n_common": 1207,
+    "match_rate": 1.0,
+    "n_only_mine": 0,
+    "n_only_exp47": 0,
+    "sum_mine": 1.9622098170096924,
+    "sum_exp47": 1.96224087528572,
+    "sum_diff": -3.1058276027673415e-05,
+    "ret_diff_mean": -2.5731794555071936e-08,
+    "ret_diff_median": -1.3392629458989364e-08,
+    "ret_diff_maxabs": 5.753846923527671e-06,
+    "ret_diff_sum": -3.105827602797183e-05,
+    "z_entry_diff_maxabs": 0.0,
+    "sum_only_mine": 0.0,
+    "sum_only_exp47": 0.0
+  },
+  "account": {
+    "base_d0": {
+      "label": "base_d0(cached pool)",
+      "emp_k": 8.269261851310727,
+      "emp_cagr": 0.24643242987359737,
+      "emp_dd": -0.19999993655015524,
+      "emp_p95": -0.2784085610965869,
+      "emp_p99": -0.32983063809884233,
+      "rob_cagr_mean": 0.16408835165441676,
+      "rob_k_mean": 5.658158325195311,
+      "worst_year": 0.017887860939187483,
+      "neg_years_emp": 0,
+      "neg_years_rob0": 0,
+      "k_is_emp": 9.646433038711546,
+      "is_emp_cagr": 0.2404593031989064,
+      "oos_emp_cagr": 0.35945227270593794,
+      "oos_emp_dd": -0.1650913704275302,
+      "k_is_rob": 5.953491821289061,
+      "is_rob_cagr": 0.14461113889932564,
+      "oos_rob_cagr": 0.2104332372636608,
+      "oos_rob_dd": -0.10414300524407971,
+      "rob": {
+        "0": {
+          "k": 5.654061889648435,
+          "cagr": 0.16396128193638093
+        },
+        "1": {
+          "k": 5.657719421386718,
+          "cagr": 0.16407363793458263
+        },
+        "2": {
+          "k": 5.563842773437499,
+          "cagr": 0.1611924587326048
+        },
+        "3": {
+          "k": 5.7625686645507805,
+          "cagr": 0.16729803780545582
+        },
+        "4": {
+          "k": 5.652598876953124,
+          "cagr": 0.1639163418630596
+        }
+      }
+    },
+    "d1_mine": {
+      "label": "d1_mine(vbt reimpl)",
+      "emp_k": 8.89479883670807,
+      "emp_cagr": 0.27414976235031796,
+      "emp_dd": -0.19999999928410284,
+      "emp_p95": -0.2728839891914875,
+      "emp_p99": -0.3259823304131532,
+      "rob_cagr_mean": 0.18570569990428448,
+      "rob_k_mean": 6.204983703613282,
+      "worst_year": 0.05207689463833454,
+      "neg_years_emp": 0,
+      "neg_years_rob0": 0,
+      "k_is_emp": 10.845013809204103,
+      "is_emp_cagr": 0.26771891074524823,
+      "oos_emp_cagr": 0.4409057601939299,
+      "oos_emp_dd": -0.1879162496245963,
+      "k_is_rob": 6.487491455078125,
+      "is_rob_cagr": 0.15536610254819716,
+      "oos_rob_cagr": 0.24655925861490346,
+      "oos_rob_dd": -0.11496688777702102,
+      "rob": {
+        "0": {
+          "k": 6.083699951171874,
+          "cagr": 0.18182788740243994
+        },
+        "1": {
+          "k": 6.256823120117187,
+          "cagr": 0.18735778520259116
+        },
+        "2": {
+          "k": 6.019327392578124,
+          "cagr": 0.17977685346069183
+        },
+        "3": {
+          "k": 6.370450439453125,
+          "cagr": 0.19099826683985555
+        },
+        "4": {
+          "k": 6.294617614746093,
+          "cagr": 0.188567706615844
+        }
+      }
+    }
+  },
+  "agreement": {
+    "base_rob_mean": {
+      "mine": 0.16408835165441676,
+      "exp47": 0.16408835165441676,
+      "diff_pp": 0.0,
+      "within_0.5pp": true
+    },
+    "d1_rob_mean": {
+      "mine": 0.18570569990428448,
+      "exp47": 0.18625453529025582,
+      "diff_pp": -0.054883538597133574,
+      "within_0.5pp": true
+    },
+    "base_emp": {
+      "mine": 0.24643242987359737,
+      "exp47": 0.24643242987359737,
+      "diff_pp": 0.0,
+      "within_0.5pp": "True"
+    },
+    "d1_emp": {
+      "mine": 0.27414976235031796,
+      "exp47": 0.27499459104059665,
+      "diff_pp": -0.08448286902786872,
+      "within_0.5pp": "True"
+    },
+    "base_oos_rob": {
+      "mine": 0.2104332372636608,
+      "exp47": 0.2104332372636608,
+      "diff_pp": 0.0,
+      "within_0.5pp": "True"
+    },
+    "d1_oos_rob": {
+      "mine": 0.24655925861490346,
+      "exp47": 0.24792161697528914,
+      "diff_pp": -0.13623583603856737,
+      "within_0.5pp": "True"
+    }
+  },
+  "d1_minus_base_rob_pp": 2.161734824986772,
+  "leverage": [
+    {
+      "basis": "emp_k",
+      "k": 8.89479883670807,
+      "final_equity": 112660.75533646706,
+      "max_lev_total": 14.744805136674438,
+      "t_max_lev_total": "2017-11-17 08:00:00+00:00",
+      "p99_lev_total": 9.230924262028584,
+      "max_lev_single": 3.181888095844964,
+      "t_max_lev_single": "2021-02-24 20:00:00+00:00",
+      "max_alloc_frac_entry": 2.987847013821447,
+      "p99_alloc_frac_entry": 2.787152428885791,
+      "mean_alloc_frac_entry": 1.1240398936818818,
+      "matches_mm_simulate": "True",
+      "within_25x_total": true,
+      "within_25x_single": true
+    },
+    {
+      "basis": "rob_k_mean",
+      "k": 6.204983703613282,
+      "final_equity": 54883.74098269162,
+      "max_lev_total": 9.982486874695857,
+      "t_max_lev_total": "2017-11-17 08:00:00+00:00",
+      "p99_lev_total": 6.391529937718828,
+      "max_lev_single": 2.1140361855714342,
+      "t_max_lev_single": "2021-02-24 20:00:00+00:00",
+      "max_alloc_frac_entry": 2.030258010827962,
+      "p99_alloc_frac_entry": 1.9321804020598399,
+      "mean_alloc_frac_entry": 0.7814529158932778,
+      "matches_mm_simulate": "True",
+      "within_25x_total": true,
+      "within_25x_single": true
+    },
+    {
+      "basis": "exp47_emp_k",
+      "k": 8.895088391304014,
+      "final_equity": 112669.40863862967,
+      "max_lev_total": 14.745333378361076,
+      "t_max_lev_total": "2017-11-17 08:00:00+00:00",
+      "p99_lev_total": 9.231230923313836,
+      "max_lev_single": 3.1820087878116845,
+      "t_max_lev_single": "2021-02-24 20:00:00+00:00",
+      "max_alloc_frac_entry": 2.9879525952153663,
+      "p99_alloc_frac_entry": 2.787245041626011,
+      "mean_alloc_frac_entry": 1.1240769018946717,
+      "matches_mm_simulate": "True",
+      "within_25x_total": true,
+      "within_25x_single": true
+    }
+  ]
+}

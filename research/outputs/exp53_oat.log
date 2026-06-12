@@ -1,0 +1,26 @@
+=== exp53: d1 機構実在性と近傍頑健性の監査 (H4, 19銘柄, mp8) ===
+base pool 1214 trades sum=+1.9086 (基準 +1.9086)
+d1 pool 1207 trades (消滅 7) pool_diff +0.0537 (+2.81%; exp47 基準 +2.81%)
+emp較正 k: d0 8.269 (exp47: 8.269) / d1 8.895 (exp47: 8.895)
+
+==============================================================================
+1. パラメータ近傍 OAT(robust seed0 較正での d1−d0)
+==============================================================================
+  [検算] base 再生成: n=1214 (ref 1214) sum=+1.9086 (ref +1.9086) 一致=True
+  base(champion)   n 1214->1207 pool_diff +0.0537 | rob0 d0 +16.40% (k 5.65) -> d1 +18.24% (k 6.08) | diff +1.84pp  [14s]
+  window=45        n 1240->1230 pool_diff -0.0078 | rob0 d0 +16.89% (k 6.39) -> d1 +17.96% (k 6.71) | diff +1.07pp  [20s]
+  window=55        n 1179->1174 pool_diff -0.0359 | rob0 d0 +12.28% (k 4.86) -> d1 +12.48% (k 5.01) | diff +0.20pp  [26s]
+  entry_z=1.9      n 1270->1264 pool_diff +0.0167 | rob0 d0 +14.89% (k 5.17) -> d1 +15.57% (k 5.38) | diff +0.68pp  [32s]
+  entry_z=2.1      n 1132->1126 pool_diff +0.1167 | rob0 d0 +13.55% (k 5.22) -> d1 +16.65% (k 5.95) | diff +3.09pp  [38s]
+  exit_z=0.4       n 1195->1189 pool_diff +0.0623 | rob0 d0 +14.54% (k 5.09) -> d1 +16.44% (k 5.57) | diff +1.91pp  [45s]
+  exit_z=0.6       n 1232->1224 pool_diff +0.0438 | rob0 d0 +14.52% (k 5.56) -> d1 +16.57% (k 6.12) | diff +2.06pp  [51s]
+  slow_z=1.6       n 1438->1425 pool_diff -0.0093 | rob0 d0 +17.93% (k 5.42) -> d1 +19.33% (k 5.84) | diff +1.40pp  [57s]
+  slow_z=1.9       n 1002-> 996 pool_diff +0.0298 | rob0 d0 +12.66% (k 5.87) -> d1 +14.46% (k 6.37) | diff +1.80pp  [63s]
+  er_max=0.5       n 1194->1187 pool_diff +0.0522 | rob0 d0 +16.57% (k 5.81) -> d1 +18.35% (k 6.25) | diff +1.78pp  [69s]
+  er_max=0.6       n 1224->1217 pool_diff +0.0645 | rob0 d0 +15.57% (k 5.46) -> d1 +18.01% (k 6.07) | diff +2.45pp  [75s]
+
+  近傍10構成: d1−d0 正 10/10 | 平均 +1.64pp | 中央値 +1.79pp | 最小 +0.20pp | 最大 +3.09pp
+  プール段: 正 7/10 | 平均 +0.0333
+
+saved -> /Users/yutootsuka/Documents/economy/.claude/worktrees/upbeat-sinoussi-d20a57/research/outputs/exp53_result.json
+総経過 75s
