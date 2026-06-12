@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>チャンピオンd1 勝ち/負けトレードの解剖 — ビジュアルレポート</title>
+<style>
+  :root{
+    --win:#16a34a; --win-soft:#bbf7d0; --loss:#dc2626; --loss-soft:#fecaca;
+    --ink:#0f172a; --sub:#64748b; --line:#e2e8f0; --bg:#f8fafc; --card:#ffffff; --accent:#2563eb;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:"Hiragino Sans","Yu Gothic UI",system-ui,sans-serif;font-size:14px;line-height:1.6}
+  .wrap{max-width:1140px;margin:0 auto;padding:32px 20px 80px}
+  h1{font-size:24px;margin:0 0 4px}
+  h2{font-size:17px;margin:0 0 2px;display:flex;align-items:center;gap:8px}
+  h2 .no{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;
+         background:var(--ink);color:#fff;font-size:12px;flex:none}
+  .meta{color:var(--sub);font-size:12.5px;margin-bottom:20px}
+  .sub{color:var(--sub);font-size:12.5px;margin:0 0 12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:18px;
+        box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .kpi .v{font-size:21px;font-weight:700;letter-spacing:-.02em}
+  .kpi .l{font-size:11.5px;color:var(--sub)}
+  .kpi .d{font-size:11px;color:var(--sub)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:860px){.grid2{grid-template-columns:1fr}}
+  .legend{display:flex;gap:14px;font-size:12px;color:var(--sub);margin:4px 0 6px;flex-wrap:wrap}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  svg{display:block;width:100%;height:auto}
+  svg text{font-family:inherit}
+  .note{font-size:12px;color:var(--sub);border-top:1px dashed var(--line);margin-top:10px;padding-top:8px}
+  .finding{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:10px 14px;margin-top:10px;font-size:13px}
+  .finding b{color:var(--accent)}
+  .dead{background:#fafafa;border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-top:10px;font-size:13px;color:var(--sub)}
+  .concl li{margin-bottom:8px}
+  .tag{display:inline-block;font-size:10.5px;padding:1px 8px;border-radius:99px;margin-left:6px;vertical-align:1px}
+  .tag.alive{background:#dbeafe;color:#1d4ed8}
+  .tag.closed{background:#f1f5f9;color:#64748b}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>勝ちトレード vs 負けトレードの解剖</h1>
+  <div class="meta">
+    チャンピオン <code>confluence_meanrev_v2_d1</code>(H4・19銘柄・平均回帰・無ストップ)/
+    d1トレードプール n=1,207(2016–2026)/ 出典: exp70・exp71・reports/25(敵対検証済み)+本可視化の追加カット。
+    <b>注意: バケット別の数値は記述統計(無検定)。セル分割は多重比較に注意(reports/25 §6)。</b>
+  </div>
+
+  <div class="cards" id="kpis"></div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2><span class="no">1</span>1トレードあたり損益の分布</h2>
+      <p class="sub">高勝率(72%)×小利幅(+52bps)を、少数の深い負け(−75bps)が削る構造。±300bpsでクリップ。</p>
+      <div class="legend"><span><i style="background:var(--win)"></i>勝ち n=865</span><span><i style="background:var(--loss)"></i>負け n=342</span></div>
+      <div id="retHist"></div>
+    </div>
+    <div class="card">
+      <h2><span class="no">2</span>保有期間の分布(H4バー数)</h2>
+      <p class="sub">勝ちは即決(中央値12本=2営業日)、負けは塩漬け(37本=6営業日超)。104本でクリップ。</p>
+      <div class="legend"><span><i style="background:var(--win)"></i>勝ち</span><span><i style="background:var(--loss)"></i>負け</span></div>
+      <div id="holdHist"></div>
+      <div class="finding" id="holdNote"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="no">3</span>保有期間 × 損益(全1,207トレード)</h2>
+    <p class="sub">右下の赤い帯=「塩漬けの緩慢ブリード」(reports/21)。左上の緑の壁=「即決の小さい勝ち」。長く持って大きく勝つトレードはほぼ存在しない。</p>
+    <div id="scatter"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2><span class="no">4</span>利益と損失の集中度(Lorenz曲線)</h2>
+      <p class="sub">負けは少数に集中(Gini <span id="gLoss"></span>)、勝ちは拡散(<span id="gWin"></span>)。「大勝ちを伸ばす」対象が構造的に薄い。</p>
+      <div class="legend"><span><i style="background:var(--win)"></i>勝ち側</span><span><i style="background:var(--loss)"></i>負け側</span><span><i style="background:#cbd5e1"></i>完全平等線</span></div>
+      <div id="lorenz"></div>
+    </div>
+    <div class="card">
+      <h2><span class="no">5</span>早期シグネチャ — 含み益が出れば、ほぼ勝ち</h2>
+      <p class="sub">エントリー後kバー時点で含み益あり/なしの最終勝率。情報は実在するが、行動化は両側とも検証済みで死亡(exp63/reports/22)。</p>
+      <div class="legend"><span><i style="background:var(--win)"></i>kバー時点で含み益あり</span><span><i style="background:var(--loss)"></i>含み損中</span></div>
+      <div id="early"></div>
+      <div class="finding" id="everNote"></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2><span class="no">6</span>出口の最適性 — 決済後、価格は戻る</h2>
+      <p class="sub">決済からhバー後の「トレード方向への」追加値動き。勝ちの決済後はマイナス=局所極値で売り抜けており、取り残しはない。</p>
+      <div class="legend"><span><i style="background:var(--win)"></i>勝ちトレードの決済後</span><span><i style="background:var(--loss)"></i>負けトレードの決済後</span></div>
+      <div id="postExit"></div>
+      <div class="finding" id="mfeNote"></div>
+    </div>
+    <div class="card">
+      <h2><span class="no">7</span>hot-hand(勝ち連鎖)は存在しない</h2>
+      <p class="sub">同一銘柄で「直前トレードが勝ちだった」場合の次トレード。むしろ僅かに悪い(統計的には差なし、p≈0.23)。</p>
+      <div id="hothand"></div>
+      <div class="dead">「直前5連勝→次勝率78%」も多重比較補正でp=0.169・期間半割で符号反転=不成立(reports/25)。<b>調子に応じた張りの増減に根拠なし。</b></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2><span class="no">8</span>乖離の深さ(|z|)別 — 唯一の本物の勾配<span class="tag closed">収穫済み</span></h2>
+      <p class="sub">深い乖離ほど勝率も平均損益も単調に良い。これが z-power サイジング P=4.0 の根拠(=既に収穫済みのエッジ)。</p>
+      <div id="zdepth"></div>
+    </div>
+    <div class="card">
+      <h2><span class="no">9</span>エントリー時ボラ五分位<span class="tag closed">幻影と確定</span></h2>
+      <p class="sub">Q5(高ボラ)が+38.5bpsと突出、Q1は損益分岐。<b>ただし事後分位の幻影</b>=因果ランク化で勾配消失(exp42)。サイジングに変換不能。</p>
+      <div id="volq"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="no">10</span>銘柄別の期待値と勝率(19銘柄)</h2>
+    <p class="sub">マイナス期待値はGBPCHFのみ(事後の銘柄除外は後知恵=禁止, reports/05)。クロス・メジャーとも広く薄く稼ぐ。バー=平均bps、数値=勝率。</p>
+    <div id="instr"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2><span class="no">11</span>年別 — 期待値は全年プラス</h2>
+      <p class="sub">バー=平均bps/トレード、折れ線=勝率。レジームを跨いで生き残っているのがチャンピオンの本体。</p>
+      <div id="year"></div>
+    </div>
+    <div class="card">
+      <h2><span class="no">12</span>条件別の平均損益(方向・曜日・時刻)</h2>
+      <p class="sub">参考カット。最大の偏差は月曜の弱さ(+7.3 vs +18.1bps)だが t=−1.45、20時(UTC)は t=−0.37 — 全セル|t|≤1.5でノイズと区別不能。</p>
+      <div id="cells"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="no">13</span>プール累積純益(等加重Σret)</h2>
+    <p class="sub">2022(高ボラ)が最大の収穫期。2024(通常ボラの持続トレンド)が最も平坦=既知の失血署名と整合。</p>
+    <div id="cum"></div>
+  </div>
+
+  <div class="card">
+    <h2>まとめ — この図たちから言えること</h2>
+    <ul class="concl">
+      <li><b>勝ちと負けは「別の生き物」</b>: 勝ち=即決(12本)・小幅(+52bps)・拡散(Gini 0.38)。負け=塩漬け(37本)・深手(−75bps)・集中(Gini 0.52)。散布図の形がすべてを要約している。</li>
+      <li><b>入口では区別がつかない</b>(z_entry KS p=0.108 / vol p=0.584)。曜日・時刻・方向のセルも全て|t|≤1.5。分かれ目はエントリー後の経路だけ — 一度+0.25%浮けば勝率91.6%、bar10で沈んでいれば42%。</li>
+      <li><b>しかし経路情報は換金できない</b>: 負け切り=誤殺3倍(exp63)、勝ち増し=採用バー未満(reports/22)、出口前倒し=オーバーシュート切り捨て(exp71)、hot-hand=不在。両側の解剖(reports/21・25)で確定。</li>
+      <li><b>唯一の本物の勾配は|z|の深さ</b>で、P=4.0サイジングが既に収穫済み。volの勾配は事後の幻影(因果化で消失)。</li>
+      <li>残った道は従来結論どおり: リスク予算の引き上げ(p95=22%で+20.4%)か、外部データ(スワップ実測・デモフォワード)。</li>
+    </ul>
+  </div>
+
+  <div class="meta">生成: make_winloss_viz_data.py → win_loss_anatomy.html(自己完結・依存なし)/ データ検算: n=1207, Σret=+1.9622(exp52基準と一致)</div>
+</div>
+
+<script>
+const DATA = __DATA__;
+
+/* ---------- helpers ---------- */
+const NS = "http://www.w3.org/2000/svg";
+function S(tag, attrs, parent){ const e = document.createElementNS(NS, tag);
+  for(const k in attrs) e.setAttribute(k, attrs[k]); if(parent) parent.appendChild(e); return e; }
+function svgIn(id, w, h){ const svg = S("svg", {viewBox:`0 0 ${w} ${h}`}, document.getElementById(id)); return svg; }
+function txt(svg, x, y, s, opt={}){ const t = S("text", {x, y, fill:opt.fill||"#64748b","font-size":opt.size||11,
+  "text-anchor":opt.anchor||"start","font-weight":opt.weight||"normal"}, svg); t.textContent = s; return t; }
+function gridY(svg, x0, x1, yScale, ticks, fmt){ ticks.forEach(v=>{ const y = yScale(v);
+  S("line",{x1:x0,x2:x1,y1:y,y2:y,stroke:"#eef2f7"},svg); txt(svg, x0-6, y+4, fmt(v), {anchor:"end",size:10}); }); }
+const fmt1 = v=>v.toFixed(0), pct = v=>(v*100).toFixed(0)+"%";
+
+/* ---------- KPI cards ---------- */
+(function(){
+  const b = DATA.basic, el = document.getElementById("kpis");
+  const cards = [
+    ["勝率", (b.win_rate*100).toFixed(1)+"%", `${b.n_win}勝 / ${b.n_loss}敗`],
+    ["平均の勝ち", "+"+b.mean_win_bps.toFixed(1)+"bps", "中央値 +"+b.median_win_bps.toFixed(1)],
+    ["平均の負け", b.mean_loss_bps.toFixed(1)+"bps", "中央値 "+b.median_loss_bps.toFixed(1)],
+    ["ペイオフ比", b.payoff.toFixed(2), "勝ち幅/負け幅(<1=高勝率型)"],
+    ["期待値", "+"+b.expectancy_bps.toFixed(1)+"bps/件", "コスト控除後"],
+    ["保有中央値", b.hold_med_win.toFixed(0)+" vs "+b.hold_med_loss.toFixed(0)+"本", "勝ち vs 負け(p90: "+b.hold_p90_win.toFixed(0)+" vs "+b.hold_p90_loss.toFixed(0)+")"],
+  ];
+  cards.forEach(([l,v,d])=>{ const k = document.createElement("div"); k.className="kpi";
+    k.innerHTML = `<div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div>`; el.appendChild(k); });
+})();
+
+/* ---------- 1. return histogram ---------- */
+(function(){
+  const W=540, H=240, m={l:40,r:8,t:10,b:26}, d=DATA.ret_hist;
+  const svg = svgIn("retHist", W, H);
+  const ymax = Math.max(...d.win, ...d.loss)*1.08;
+  const xs = v=> m.l + (v+300)/600*(W-m.l-m.r);
+  const ys = v=> H-m.b - v/ymax*(H-m.t-m.b);
+  gridY(svg, m.l, W-m.r, ys, [0,25,50,75,100,125].filter(v=>v<ymax), fmt1);
+  const bw = (xs(10)-xs(0))-1.5;
+  d.bins.forEach((b0,i)=>{
+    if(d.loss[i]>0) S("rect",{x:xs(b0)+.75,y:ys(d.loss[i]),width:bw,height:ys(0)-ys(d.loss[i]),fill:"var(--loss)",opacity:.78},svg);
+    if(d.win[i]>0)  S("rect",{x:xs(b0)+.75,y:ys(d.win[i]), width:bw,height:ys(0)-ys(d.win[i]), fill:"var(--win)", opacity:.78},svg);
+  });
+  S("line",{x1:xs(0),x2:xs(0),y1:m.t,y2:H-m.b,stroke:"#94a3b8","stroke-dasharray":"3 3"},svg);
+  [-300,-200,-100,0,100,200].forEach(v=> txt(svg, xs(v), H-8, v, {anchor:"middle",size:10}));
+  txt(svg, xs(300), H-8, "300bps", {anchor:"middle",size:10});
+})();
+
+/* ---------- 2. hold histogram ---------- */
+(function(){
+  const W=540, H=240, m={l:40,r:8,t:10,b:26}, d=DATA.hold_hist;
+  const svg = svgIn("holdHist", W, H);
+  const ymax = Math.max(...d.win, ...d.loss)*1.08;
+  const xs = v=> m.l + v/104*(W-m.l-m.r);
+  const ys = v=> H-m.b - v/ymax*(H-m.t-m.b);
+  gridY(svg, m.l, W-m.r, ys, [0,50,100,150,200].filter(v=>v<ymax), fmt1);
+  const bw = (xs(4)-xs(0))-1.5;
+  d.bins.forEach((b0,i)=>{
+    if(d.loss[i]>0) S("rect",{x:xs(b0)+.75,y:ys(d.loss[i]),width:bw,height:ys(0)-ys(d.loss[i]),fill:"var(--loss)",opacity:.78},svg);
+    if(d.win[i]>0)  S("rect",{x:xs(b0)+.75,y:ys(d.win[i]), width:bw,height:ys(0)-ys(d.win[i]), fill:"var(--win)", opacity:.78},svg);
+  });
+  [0,20,40,60,80,100].forEach(v=> txt(svg, xs(v), H-8, v, {anchor:"middle",size:10}));
+  txt(svg, W-m.r, H-8, "バー", {anchor:"end",size:10});
+  document.getElementById("holdNote").innerHTML =
+    `<b>勝ちの${pct(DATA.hold_hist.win.slice(0,6).reduce((a,c)=>a+c,0)/DATA.basic.n_win)}は24本(4営業日)以内に決着</b>。負けの保有p90は${DATA.basic.hold_p90_loss.toFixed(0)}本=2週間級の塩漬け。`;
+})();
+
+/* ---------- 3. scatter ---------- */
+(function(){
+  const W=1080, H=320, m={l:46,r:14,t:12,b:30};
+  const svg = svgIn("scatter", W, H);
+  const xmax=120, ylim=300;
+  const xs = v=> m.l + Math.min(v,xmax)/xmax*(W-m.l-m.r);
+  const ys = v=> m.t + (1-(Math.max(-ylim,Math.min(ylim,v))+ylim)/(2*ylim))*(H-m.t-m.b);
+  gridY(svg, m.l, W-m.r, ys, [-300,-150,0,150,300], v=>v);
+  [20,40,60,80,100,120].forEach(v=>{ txt(svg, xs(v), H-8, v===120?"120+":v, {anchor:"middle",size:10}); });
+  txt(svg, m.l+2, H-8, "保有バー数 →", {size:10});
+  S("line",{x1:m.l,x2:W-m.r,y1:ys(0),y2:ys(0),stroke:"#94a3b8","stroke-dasharray":"3 3"},svg);
+  DATA.scatter.forEach(([b,r])=>{
+    S("circle",{cx:xs(b),cy:ys(r),r:2.4,fill:r>0?"var(--win)":"var(--loss)",opacity:.4},svg);
+  });
+  txt(svg, xs(70), ys(-180), "塩漬けの緩慢ブリード →", {fill:"#b91c1c",size:11,weight:600});
+  txt(svg, xs(8), ys(230), "即決の小さい勝ちの壁", {fill:"#15803d",size:11,weight:600});
+})();
+
+/* ---------- 4. lorenz ---------- */
+(function(){
+  const W=540, H=280, m={l:46,r:10,t:10,b:30};
+  const svg = svgIn("lorenz", W, H);
+  const xs = v=> m.l + v*(W-m.l-m.r), ys = v=> m.t + (1-v)*(H-m.t-m.b);
+  [0,.25,.5,.75,1].forEach(v=>{ S("line",{x1:m.l,x2:W-m.r,y1:ys(v),y2:ys(v),stroke:"#eef2f7"},svg);
+    txt(svg, m.l-6, ys(v)+4, pct(v), {anchor:"end",size:10}); txt(svg, xs(v), H-10, pct(v), {anchor:"middle",size:10}); });
+  S("line",{x1:xs(0),x2:xs(1),y1:ys(0),y2:ys(1),stroke:"#cbd5e1","stroke-dasharray":"4 3"},svg);
+  const path = (pts,color)=>{ let dd="M"+pts.map(p=>`${xs(p[0]).toFixed(1)},${ys(p[1]).toFixed(1)}`).join("L");
+    S("path",{d:dd,fill:"none",stroke:color,"stroke-width":2.4},svg); };
+  path(DATA.lorenz.loss, "var(--loss)"); path(DATA.lorenz.win, "var(--win)");
+  txt(svg, xs(.55), ys(.16), "負け: 下位を少数の深手が占める", {fill:"#b91c1c",size:11});
+  txt(svg, xs(.28), ys(.45), "勝ち: 広く薄く", {fill:"#15803d",size:11});
+  txt(svg, m.l, 16, "件数の累積シェア(小→大)→ 金額の累積シェア", {size:10});
+  document.getElementById("gWin").textContent = DATA.lorenz.gini_win.toFixed(2);
+  document.getElementById("gLoss").textContent = DATA.lorenz.gini_loss.toFixed(2);
+})();
+
+/* ---------- 5. early signature ---------- */
+(function(){
+  const W=540, H=250, m={l:46,r:10,t:14,b:40};
+  const svg = svgIn("early", W, H);
+  const keys = ["bar1","bar2","bar3","bar5","bar10"], d = DATA.exp70.pos_at_k;
+  const ys = v=> H-m.b - v*(H-m.t-m.b);
+  gridY(svg, m.l, W-m.r, ys, [0,.25,.5,.75,1], pct);
+  const slot = (W-m.l-m.r)/keys.length;
+  keys.forEach((k,i)=>{
+    const x0 = m.l + i*slot + slot*0.16, bw = slot*0.3;
+    const a = d[k].winrate_if_pos, b = d[k].winrate_if_neg;
+    S("rect",{x:x0,y:ys(a),width:bw,height:ys(0)-ys(a),fill:"var(--win)",rx:3},svg);
+    S("rect",{x:x0+bw+4,y:ys(b),width:bw,height:ys(0)-ys(b),fill:"var(--loss)",rx:3},svg);
+    txt(svg, x0+bw/2, ys(a)-4, pct(a), {anchor:"middle",size:10,fill:"#15803d",weight:600});
+    txt(svg, x0+bw*1.5+4, ys(b)-4, pct(b), {anchor:"middle",size:10,fill:"#b91c1c",weight:600});
+    txt(svg, m.l+i*slot+slot/2, H-22, k.replace("bar","")+"本後", {anchor:"middle",size:11});
+  });
+  txt(svg, m.l, H-6, "※生存トレードのみ(k本以上保有)。最終勝率", {size:10});
+  const e = DATA.exp70.ever_mfe;
+  document.getElementById("everNote").innerHTML =
+    `保有中に一度でも <b>+0.25%</b> の含み益を見れば最終勝率 <b>${pct(e["ever_0.25pct"].win_rate)}</b>(n=${e["ever_0.25pct"].n})、見なければ ${pct(e["ever_0.25pct"].win_rate_never)}。一度も浮かない負けは全敗者の${pct(DATA.exp70.losers_never_in_profit)}。`;
+})();
+
+/* ---------- 6. post-exit drift ---------- */
+(function(){
+  const W=540, H=230, m={l:46,r:10,t:16,b:36};
+  const svg = svgIn("postExit", W, H);
+  const hs = ["h1","h2","h5","h10"], pw = DATA.exp70.post_exit.winners, pl = DATA.exp70.post_exit.losers;
+  const ymin=-6, ymax=2;
+  const ys = v=> m.t + (ymax-v)/(ymax-ymin)*(H-m.t-m.b);
+  gridY(svg, m.l, W-m.r, ys, [-6,-4,-2,0,2], v=>v+"bps");
+  S("line",{x1:m.l,x2:W-m.r,y1:ys(0),y2:ys(0),stroke:"#94a3b8"},svg);
+  const slot=(W-m.l-m.r)/hs.length;
+  hs.forEach((h,i)=>{
+    const x0=m.l+i*slot+slot*0.18, bw=slot*0.27;
+    const a=pw[h].mean_bps, b=pl[h].mean_bps;
+    S("rect",{x:x0,y:Math.min(ys(a),ys(0)),width:bw,height:Math.abs(ys(a)-ys(0)),fill:"var(--win)",rx:3},svg);
+    S("rect",{x:x0+bw+4,y:Math.min(ys(b),ys(0)),width:bw,height:Math.abs(ys(b)-ys(0)),fill:"var(--loss)",rx:3,opacity:.85},svg);
+    txt(svg, x0+bw/2, a<0?ys(a)+13:ys(a)-4, a.toFixed(1), {anchor:"middle",size:10,fill:"#15803d",weight:600});
+    txt(svg, x0+bw*1.5+4, b<0?ys(b)+13:ys(b)-4, b.toFixed(1), {anchor:"middle",size:10,fill:"#b91c1c",weight:600});
+    txt(svg, m.l+i*slot+slot/2, H-18, "+"+h.slice(1)+"本", {anchor:"middle",size:11});
+  });
+  txt(svg, m.l, H-4, "勝ち決済+5本は t=−3.0(有意に逆戻り)", {size:10});
+  const c = DATA.exp70.capture;
+  document.getElementById("mfeNote").innerHTML =
+    `MFE捕捉率 中央値 <b>${c.capture_median.toFixed(2)}</b>、勝者の<b>${pct(c.exit_at_mfe_share)}が保有中最高値のバーで決済</b>。バー内の有利幅+7.5bpsは実在するが因果な指値出口は−0.97bps/件で純劣化(exp71)。`;
+})();
+
+/* ---------- 7. hot-hand ---------- */
+(function(){
+  const W=540, H=210, m={l:46,r:10,t:18,b:30};
+  const svg = svgIn("hothand", W, H);
+  const hh = DATA.hothand;
+  const rows = [["直前が勝ち", hh.after_win.win_rate, hh.after_win.n, "var(--win)"],
+                ["直前が負け", hh.after_loss.win_rate, hh.after_loss.n, "var(--loss)"],
+                ["無条件", hh.base, DATA.n, "#94a3b8"]];
+  const xs = v=> m.l + v/0.85*(W-m.l-150);
+  rows.forEach((r,i)=>{
+    const y = m.t + i*((H-m.t-m.b)/rows.length) + 8, bh = 26;
+    S("rect",{x:m.l,y,width:xs(r[1])-m.l,height:bh,fill:r[3],rx:5,opacity:.85},svg);
+    txt(svg, xs(r[1])+8, y+bh/2+4, pct2(r[1])+" (n="+r[2]+")", {size:12,weight:600,fill:"#0f172a"});
+    txt(svg, m.l, y-4, r[0], {size:11});
+  });
+  S("line",{x1:xs(hh.base),x2:xs(hh.base),y1:m.t,y2:H-m.b,stroke:"#475569","stroke-dasharray":"3 3"},svg);
+  txt(svg, m.l, H-6, "同一銘柄内・エントリー時点でexit確定済みの直近トレードで条件付け(因果)", {size:10});
+  function pct2(v){ return (v*100).toFixed(1)+"%"; }
+})();
+
+/* ---------- 8/9. z-depth & vol quintile (dual mini panels) ---------- */
+function dualPanel(id, rows, opt={}){
+  const W=540, H=250, m={l:46,r:10,t:26,b:46};
+  const svg = svgIn(id, W, H);
+  const bmax = Math.max(...rows.map(r=>r.mean_bps))*1.25, bmin = Math.min(0, ...rows.map(r=>r.mean_bps))*1.4-2;
+  const ys = v=> m.t + (bmax-v)/(bmax-bmin)*(H-m.t-m.b);
+  gridY(svg, m.l, W-m.r, ys, opt.ticks||[0,10,20,30,40], v=>v+"bps");
+  const slot=(W-m.l-m.r)/rows.length;
+  const wrLine=[];
+  rows.forEach((r,i)=>{
+    const x0=m.l+i*slot+slot*0.2, bw=slot*0.6;
+    S("rect",{x:x0,y:Math.min(ys(r.mean_bps),ys(0)),width:bw,height:Math.abs(ys(r.mean_bps)-ys(0)),
+      fill:r.mean_bps>=0?"var(--accent)":"var(--loss)",rx:4,opacity:.8},svg);
+    txt(svg, x0+bw/2, r.mean_bps>=0?ys(r.mean_bps)-5:ys(r.mean_bps)+13, r.mean_bps.toFixed(1), {anchor:"middle",size:10,weight:600,fill:"#1e40af"});
+    txt(svg, m.l+i*slot+slot/2, H-28, r.label, {anchor:"middle",size:10.5});
+    txt(svg, m.l+i*slot+slot/2, H-14, "n="+r.n+" / "+pct(r.win_rate), {anchor:"middle",size:9.5,fill:"#94a3b8"});
+    wrLine.push([m.l+i*slot+slot/2, r.win_rate]);
+  });
+  txt(svg, m.l, 14, "バー=平均bps / 下段=件数と勝率", {size:10});
+}
+dualPanel("zdepth", DATA.by_zdepth.filter(r=>r.n>0));
+dualPanel("volq", DATA.by_volq);
+
+/* ---------- 10. instrument hbars ---------- */
+(function(){
+  const rows = DATA.by_instr, rh=22, m={l:84,r:120,t:8,b:24}, W=1080, H=m.t+m.b+rows.length*rh;
+  const svg = svgIn("instr", W, H);
+  const bmin = Math.min(0,...rows.map(r=>r.mean_bps))-2, bmax = Math.max(...rows.map(r=>r.mean_bps))+4;
+  const xs = v=> m.l + (v-bmin)/(bmax-bmin)*(W-m.l-m.r);
+  rows.forEach((r,i)=>{
+    const y=m.t+i*rh+3, h=rh-7;
+    S("rect",{x:Math.min(xs(0),xs(r.mean_bps)),y,width:Math.abs(xs(r.mean_bps)-xs(0)),height:h,
+      fill:r.mean_bps>=0?"var(--win)":"var(--loss)",rx:3,opacity:.82},svg);
+    txt(svg, m.l-6, y+h-2, r.label, {anchor:"end",size:11});
+    txt(svg, xs(Math.max(r.mean_bps,0))+6, y+h-2,
+        r.mean_bps.toFixed(1)+"bps / 勝率"+(r.win_rate*100).toFixed(0)+"% / n="+r.n, {size:10});
+  });
+  S("line",{x1:xs(0),x2:xs(0),y1:m.t,y2:H-m.b,stroke:"#94a3b8"},svg);
+})();
+
+/* ---------- 11. yearly ---------- */
+(function(){
+  const rows = DATA.by_year, W=540, H=250, m={l:46,r:46,t:16,b:30};
+  const svg = svgIn("year", W, H);
+  const bmax = Math.max(...rows.map(r=>r.mean_bps))*1.25;
+  const ys = v=> m.t + (bmax-v)/bmax*(H-m.t-m.b);
+  gridY(svg, m.l, W-m.r, ys, [0,10,20,30], v=>v+"bps");
+  const slot=(W-m.l-m.r)/rows.length;
+  const yw = v=> m.t + (1-(v-.5)/.4)*(H-m.t-m.b);
+  let line="M";
+  rows.forEach((r,i)=>{
+    const x0=m.l+i*slot+slot*0.2, bw=slot*0.6;
+    S("rect",{x:x0,y:ys(r.mean_bps),width:bw,height:ys(0)-ys(r.mean_bps),fill:"var(--accent)",rx:3,opacity:.75},svg);
+    txt(svg, m.l+i*slot+slot/2, H-16, "'"+r.label.slice(2), {anchor:"middle",size:10});
+    line += `${(m.l+i*slot+slot/2).toFixed(1)},${yw(r.win_rate).toFixed(1)}` + (i<rows.length-1?"L":"");
+  });
+  S("path",{d:line,fill:"none",stroke:"#0f172a","stroke-width":2,opacity:.7},svg);
+  rows.forEach((r,i)=> S("circle",{cx:m.l+i*slot+slot/2,cy:yw(r.win_rate),r:2.6,fill:"#0f172a"},svg));
+  txt(svg, W-m.r+4, yw(.7)+4, "勝率", {size:10});
+  [-0,.5,.7,.9].forEach(()=>{});
+  txt(svg, W-m.r+4, yw(.9)+4, "90%", {size:9,fill:"#cbd5e1"});
+  txt(svg, W-m.r+4, yw(.5)+4, "50%", {size:9,fill:"#cbd5e1"});
+})();
+
+/* ---------- 12. cells: dir / dow / hour ---------- */
+(function(){
+  const el = document.getElementById("cells");
+  const groups = [
+    ["方向", DATA.by_dir],
+    ["曜日(UTC)", ["月","火","水","木","金"].map(w=>DATA.by_dow.find(r=>r.label===w))],
+    ["エントリー時刻(UTC)", DATA.by_hour.map(r=>({...r, label:r.label+"時"}))],
+  ];
+  const W=540, rowH=20;
+  groups.forEach(([name, rows])=>{
+    rows = rows.filter(Boolean);
+    const H = 26+rows.length*rowH+8;
+    const svg = S("svg",{viewBox:`0 0 ${W} ${H}`}, el);
+    txt(svg, 0, 14, name, {size:11.5,weight:700,fill:"#0f172a"});
+    const bmax = 42, m={l:104,r:10};
+    const xs = v=> m.l + Math.max(0,v)/bmax*(W-m.l-m.r-150);
+    rows.forEach((r,i)=>{
+      const y=24+i*rowH;
+      S("rect",{x:m.l,y,width:Math.max(1.5,xs(r.mean_bps)-m.l),height:rowH-6,fill:"var(--accent)",opacity:.7,rx:3},svg);
+      txt(svg, m.l-6, y+rowH-9, r.label, {anchor:"end",size:10.5});
+      txt(svg, xs(Math.max(0,r.mean_bps))+6, y+rowH-9, r.mean_bps.toFixed(1)+"bps / "+(r.win_rate*100).toFixed(0)+"% / n="+r.n, {size:9.5});
+    });
+  });
+})();
+
+/* ---------- 13. cumulative ---------- */
+(function(){
+  const W=1080, H=260, m={l:50,r:14,t:12,b:26}, d=DATA.cum_pool;
+  const svg = svgIn("cum", W, H);
+  const vmax = Math.max(...d.v)*1.06;
+  const xs = i=> m.l + i/(d.t.length-1)*(W-m.l-m.r);
+  const ys = v=> m.t + (vmax-v)/vmax*(H-m.t-m.b);
+  gridY(svg, m.l, W-m.r, ys, [0,.5,1,1.5,2].filter(v=>v<vmax), v=>(v*100).toFixed(0)+"%");
+  let line="M"; d.v.forEach((v,i)=>{ line += `${xs(i).toFixed(1)},${ys(v).toFixed(1)}` + (i<d.v.length-1?"L":""); });
+  S("path",{d:line+`L${xs(d.v.length-1)},${ys(0)}L${xs(0)},${ys(0)}Z`,fill:"var(--win)",opacity:.10},svg);
+  S("path",{d:line,fill:"none",stroke:"var(--win)","stroke-width":2.2},svg);
+  d.t.forEach((t,i)=>{ if(t.endsWith("-01-31")||t.endsWith("-01-30")) { txt(svg, xs(i), H-8, t.slice(0,4), {anchor:"middle",size:10});
+    S("line",{x1:xs(i),x2:xs(i),y1:m.t,y2:H-m.b,stroke:"#f1f5f9"},svg);} });
+})();
+</script>
+</body>
+</html>
