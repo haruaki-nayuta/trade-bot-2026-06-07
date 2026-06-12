@@ -1,0 +1,42 @@
+{
+  "k": 6.205,
+  "cagr": 0.18570033121220186,
+  "max_dd_realized": -0.14278641763890831,
+  "time_below_1pct": 0.49444685735558724,
+  "episodes_below_1pct": 233,
+  "time_below_5pct": 0.1250853136439784,
+  "episodes_below_5pct": 89,
+  "time_below_10pct": 0.01594589563814606,
+  "episodes_below_10pct": 13,
+  "longest_underwater_days": 349,
+  "longest_underwater_span": [
+    "2021-09-01",
+    "2022-08-16"
+  ],
+  "time_below_initial": 0.0011788794440652727,
+  "min_vs_initial": -0.0035704884312477425,
+  "min_vs_initial_date": "2016-08-03",
+  "last_below_initial": "2016-08-10",
+  "neg_month_share": 0.25833333333333336,
+  "worst_month": -0.05214524723558911,
+  "best_month": 0.13168970854875783,
+  "bootstrap_horizons": {
+    "6m": {
+      "p_end_below_initial": 0.12175,
+      "p_touch_minus10": 0.03375,
+      "p_touch_minus20": 0.0005
+    },
+    "1y": {
+      "p_end_below_initial": 0.04825,
+      "p_touch_minus10": 0.04275,
+      "p_touch_minus20": 0.00075
+    },
+    "2y": {
+      "p_end_below_initial": 0.008,
+      "p_touch_minus10": 0.04625,
+      "p_touch_minus20": 0.00075
+    }
+  },
+  "boot_p95": -0.19906722303434854,
+  "boot_p50": -0.13568616241049486
+}
