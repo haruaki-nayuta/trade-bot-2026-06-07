@@ -1,0 +1,226 @@
+{
+  "n_trades": 1207,
+  "sum_ret": 1.9622098170096924,
+  "win_rate": 0.7166528583264291,
+  "bars_held": {
+    "win_median": 12.0,
+    "loss_median": 37.0
+  },
+  "concentration": {
+    "1pct": {
+      "win_top_share_winsbase_exp70def": 0.05147606228023739,
+      "win_top_share_allbase_exp62def": 0.0663169966022842,
+      "loss_worst_share_allbase_exp62def": 0.1802665791761257,
+      "loss_worst_share_lossbase": 0.06396226616608514,
+      "k_wins": 8,
+      "k_all": 12,
+      "k_loss": 3
+    },
+    "5pct": {
+      "win_top_share_winsbase_exp70def": 0.15587291694174413,
+      "win_top_share_allbase_exp62def": 0.19768640252164876,
+      "loss_worst_share_allbase_exp62def": 0.5066576097805484,
+      "loss_worst_share_lossbase": 0.23013544641843192,
+      "k_wins": 43,
+      "k_all": 60,
+      "k_loss": 17
+    },
+    "10pct": {
+      "win_top_share_winsbase_exp70def": 0.25610263278253564,
+      "win_top_share_allbase_exp62def": 0.32449195300887496,
+      "loss_worst_share_allbase_exp62def": 0.7365602607902754,
+      "loss_worst_share_lossbase": 0.36003920457369654,
+      "k_wins": 86,
+      "k_all": 120,
+      "k_loss": 34
+    }
+  },
+  "gini": {
+    "wins": 0.3814087519358056,
+    "losses": 0.5220375208233714
+  },
+  "audit": {
+    "bars_held_mismatch": 0,
+    "overlap_strict": 0,
+    "overlap_eq": 0
+  },
+  "C": {
+    "capture_median_postcost": 0.953142528073242,
+    "capture_median_precost": 1.0,
+    "mfe_median_bps_winners": 50.02709849070808,
+    "exit_at_mfe_share": 0.8682080924855491,
+    "cost_gap_median_bps": 2.052157115811585
+  },
+  "D": {
+    "winners": {
+      "h1": {
+        "mean_bps": -1.2920635997023473,
+        "t": -1.698899037618937,
+        "n": 865
+      },
+      "h2": {
+        "mean_bps": -1.728085332530852,
+        "t": -1.853550520240644,
+        "n": 865
+      },
+      "h5": {
+        "mean_bps": -4.4433379447688175,
+        "t": -2.957202117116077,
+        "n": 865
+      },
+      "h10": {
+        "mean_bps": -3.7640983631880505,
+        "t": -1.8767302026304562,
+        "n": 864
+      }
+    },
+    "losers": {
+      "h1": {
+        "mean_bps": -0.2786731256883226,
+        "t": -0.24593789424679713,
+        "n": 342
+      },
+      "h2": {
+        "mean_bps": 0.3326068008289598,
+        "t": 0.23074407940588892,
+        "n": 342
+      },
+      "h5": {
+        "mean_bps": 0.2884995752779882,
+        "t": 0.11304732425921697,
+        "n": 342
+      },
+      "h10": {
+        "mean_bps": -2.0317081565760358,
+        "t": -0.6136667785681874,
+        "n": 342
+      }
+    },
+    "winners_h5_long": {
+      "mean_bps": -2.6889443988642983,
+      "n": 403
+    },
+    "winners_h5_short": {
+      "mean_bps": -5.973685561650901,
+      "n": 462
+    }
+  },
+  "B": {
+    "bar1": {
+      "n_eligible_exp70": 1207,
+      "n_tautological": 10,
+      "exp70_winrate_if_pos": 0.7945670628183361,
+      "exp70_winrate_if_neg": 0.6423948220064725,
+      "strict_winrate_if_pos": 0.7910189982728842,
+      "strict_winrate_if_neg": 0.6423948220064725,
+      "strict_n": 1197
+    },
+    "bar2": {
+      "n_eligible_exp70": 1197,
+      "n_tautological": 19,
+      "exp70_winrate_if_pos": 0.8099173553719008,
+      "exp70_winrate_if_neg": 0.6165540540540541,
+      "strict_winrate_if_pos": 0.8037542662116041,
+      "strict_winrate_if_neg": 0.6165540540540541,
+      "strict_n": 1178
+    },
+    "bar3": {
+      "n_eligible_exp70": 1178,
+      "n_tautological": 25,
+      "exp70_winrate_if_pos": 0.8493150684931506,
+      "exp70_winrate_if_neg": 0.5723905723905723,
+      "strict_winrate_if_pos": 0.8425760286225402,
+      "strict_winrate_if_neg": 0.5723905723905723,
+      "strict_n": 1153
+    },
+    "bar5": {
+      "n_eligible_exp70": 1109,
+      "n_tautological": 38,
+      "exp70_winrate_if_pos": 0.8453237410071942,
+      "exp70_winrate_if_neg": 0.5370705244122965,
+      "strict_winrate_if_pos": 0.833976833976834,
+      "strict_winrate_if_neg": 0.5370705244122965,
+      "strict_n": 1071
+    },
+    "bar10": {
+      "n_eligible_exp70": 899,
+      "n_tautological": 49,
+      "exp70_winrate_if_pos": 0.8828125,
+      "exp70_winrate_if_neg": 0.42330097087378643,
+      "strict_winrate_if_pos": 0.8656716417910447,
+      "strict_winrate_if_neg": 0.42330097087378643,
+      "strict_n": 850
+    }
+  },
+  "E_hothand_causal": {
+    "strict(exit<entry)": {
+      "n_after_win": 851,
+      "n_after_loss": 337,
+      "wr_after_win": 0.7050528789659224,
+      "wr_after_loss": 0.7388724035608308,
+      "mr_bps_after_win": 14.515058298301044,
+      "mr_bps_after_loss": 19.933262393498914,
+      "delta_wr": -0.033819524594908446,
+      "delta_mr_bps": -5.41820409519787,
+      "p_delta_wr": 0.225,
+      "p_delta_mr": 0.277
+    },
+    "nonstrict(exit<=entry)": {
+      "n_after_win": 851,
+      "n_after_loss": 337,
+      "wr_after_win": 0.7050528789659224,
+      "wr_after_loss": 0.7388724035608308,
+      "mr_bps_after_win": 14.515058298301044,
+      "mr_bps_after_loss": 19.933262393498914,
+      "delta_wr": -0.033819524594908446,
+      "delta_mr_bps": -5.41820409519787,
+      "p_delta_wr": 0.225,
+      "p_delta_mr": 0.277
+    }
+  },
+  "E_last5": {
+    "0": {
+      "n": 9,
+      "wr": 0.6666666666666666,
+      "mr_bps": -18.698645794088232
+    },
+    "1": {
+      "n": 41,
+      "wr": 0.6829268292682927,
+      "mr_bps": 15.13183343776516
+    },
+    "2": {
+      "n": 148,
+      "wr": 0.7432432432432432,
+      "mr_bps": 25.851825406357065
+    },
+    "3": {
+      "n": 281,
+      "wr": 0.6868327402135231,
+      "mr_bps": 11.649119196177887
+    },
+    "4": {
+      "n": 446,
+      "wr": 0.6883408071748879,
+      "mr_bps": 9.56778168461768
+    },
+    "5": {
+      "n": 277,
+      "wr": 0.779783393501805,
+      "mr_bps": 27.37991762764876
+    }
+  },
+  "E_5of5_vs_rest": {
+    "n_5of5": 277,
+    "wr_5of5": 0.779783393501805,
+    "wr_rest": 0.6962162162162162,
+    "t_meanret": 2.989961344786146,
+    "p_meanret": 0.0029130991722328757,
+    "p_wr_2prop": 0.006847210498476713
+  },
+  "E_monthly_ac1": 0.12019474231249157,
+  "F": {
+    "z_entry_ks_p": 0.10797615585661732,
+    "vol_entry_ks_p": 0.5839863975532985
+  }
+}

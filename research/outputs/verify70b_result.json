@@ -1,0 +1,19 @@
+{
+  "obs": {
+    "delta_wr": 0.08356717728558882,
+    "corr": 0.038787692486080806,
+    "delta_mr_bps": 14.602814228288873
+  },
+  "instr_shuffle": {
+    "p_delta_wr_2s": 0.0135,
+    "p_delta_wr_1s": 0.004,
+    "p_corr_2s": 0.181,
+    "p_delta_mr_2s": 0.0095
+  },
+  "instr_year_shuffle": {
+    "p_delta_wr_2s": 0.012,
+    "p_delta_wr_1s": 0.004,
+    "p_corr_2s": 0.1545,
+    "p_delta_mr_2s": 0.0165
+  }
+}
