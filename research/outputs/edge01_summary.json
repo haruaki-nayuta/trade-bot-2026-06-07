@@ -1,0 +1,557 @@
+{
+  "pool_check": {
+    "n": 1207,
+    "sum_ret": 1.9622098170096924,
+    "match": true
+  },
+  "z_check_max_diff": 0.0,
+  "m1_h4_close_diff_bps": {
+    "major": {
+      "median": 0.0,
+      "max": 0.0
+    },
+    "cross": {
+      "median": 0.0,
+      "max": 1.2410155644038134
+    }
+  },
+  "cohorts": {
+    "spike_made_med": {
+      "name": "spike_made_med",
+      "definition": "\u53cd\u5b9f\u4eee\u60f3(\u5e83\u7fa9): sig close\u2192\u6700\u5f8c5\u5206\u9664\u304f\u4e2d\u592e\u5024 \u7f6e\u63db\u3067 z \u30af\u30ed\u30b9\u4e0d\u6210\u7acb",
+      "n": 725,
+      "n_excluded_nan": 0,
+      "mean_bps": 12.415271389597224,
+      "sum_pnl": 0.9001071757457988,
+      "pnl_share_pct": 45.872346129130506,
+      "win_rate_pct": 71.86206896551724,
+      "rest_mean_bps": 22.035324507549657,
+      "ci_diff_bps": [
+        -18.990681942853474,
+        -1.2384321460250143
+      ],
+      "small_n": false,
+      "IS": {
+        "n": 402,
+        "mean_bps": 10.413154143903062,
+        "sum": 0.41860879658490313,
+        "win_pct": 70.39800995024875
+      },
+      "OOS": {
+        "n": 323,
+        "mean_bps": 14.907070562256829,
+        "sum": 0.4814983791608956,
+        "win_pct": 73.68421052631578
+      },
+      "yearly_sum": {
+        "2016": 0.0574,
+        "2017": 0.149,
+        "2018": 0.0903,
+        "2019": 0.0533,
+        "2020": -0.0373,
+        "2021": 0.1059,
+        "2022": 0.0517,
+        "2023": 0.0604,
+        "2024": 0.1125,
+        "2025": 0.1833,
+        "2026": 0.0736
+      },
+      "max_year": 2025,
+      "max_year_share": 0.20365273840091336,
+      "single_year_flag": false,
+      "long": {
+        "n": 355,
+        "mean_bps": 10.632079258805138,
+        "sum": 0.37743881368758236,
+        "win_pct": 68.45070422535211
+      },
+      "short": {
+        "n": 370,
+        "mean_bps": 14.126171947519362,
+        "sum": 0.5226683620582164,
+        "win_pct": 75.13513513513513
+      }
+    },
+    "spike_made_l5": {
+      "name": "spike_made_l5",
+      "definition": "\u53cd\u5b9f\u4eee\u60f3(\u72ed\u7fa9): sig close\u2192\u6700\u5f8c5\u5206\u76f4\u524d close \u7f6e\u63db\u3067 z \u30af\u30ed\u30b9\u4e0d\u6210\u7acb = \u672b\u5c3e5\u5206\u30b9\u30d1\u30a4\u30af\u304c\u4f5c\u3063\u305f",
+      "n": 98,
+      "n_excluded_nan": 0,
+      "mean_bps": 1.8422914151477416,
+      "sum_pnl": 0.018054455868447866,
+      "pnl_share_pct": 0.9201129277570006,
+      "win_rate_pct": 63.26530612244898,
+      "rest_mean_bps": 17.530706592797515,
+      "ci_diff_bps": [
+        -30.072681818732878,
+        -2.8585456272885605
+      ],
+      "small_n": false,
+      "IS": {
+        "n": 59,
+        "mean_bps": 4.8714221118676635,
+        "sum": 0.028741390460019216,
+        "win_pct": 62.71186440677966
+      },
+      "OOS": {
+        "n": 39,
+        "mean_bps": -2.74023963886445,
+        "sum": -0.010686934591571357,
+        "win_pct": 64.1025641025641
+      },
+      "yearly_sum": {
+        "2016": 0.0263,
+        "2017": 0.0102,
+        "2018": 0.0216,
+        "2019": -0.0007,
+        "2020": -0.0075,
+        "2021": -0.0212,
+        "2022": -0.0442,
+        "2023": 0.0033,
+        "2024": 0.0139,
+        "2025": 0.0121,
+        "2026": 0.0043
+      },
+      "max_year": 2022,
+      "max_year_share": -2.4480461842339714,
+      "single_year_flag": true,
+      "long": {
+        "n": 45,
+        "mean_bps": -11.66576096354459,
+        "sum": -0.052495924335950656,
+        "win_pct": 55.55555555555556
+      },
+      "short": {
+        "n": 53,
+        "mean_bps": 13.311392491395946,
+        "sum": 0.07055038020439852,
+        "win_pct": 69.81132075471697
+      }
+    },
+    "spike_share_hi": {
+      "name": "spike_share_hi",
+      "definition": "sig \u30d0\u30fc\u306e 5\u5206\u7a93\u6700\u5927|move| > 0.6\u00d7|net\u0394close|",
+      "n": 320,
+      "n_excluded_nan": 0,
+      "mean_bps": 20.94313070792821,
+      "sum_pnl": 0.6701801826537026,
+      "pnl_share_pct": 34.15452974486304,
+      "win_rate_pct": 71.5625,
+      "rest_mean_bps": 14.566286745839793,
+      "ci_diff_bps": [
+        -2.882850650339603,
+        15.481217911071814
+      ],
+      "small_n": false,
+      "IS": {
+        "n": 183,
+        "mean_bps": 17.138762715272748,
+        "sum": 0.31363935768949125,
+        "win_pct": 68.85245901639344
+      },
+      "OOS": {
+        "n": 137,
+        "mean_bps": 26.02487773461397,
+        "sum": 0.3565408249642114,
+        "win_pct": 75.18248175182481
+      },
+      "yearly_sum": {
+        "2016": 0.0193,
+        "2017": 0.1592,
+        "2018": 0.0075,
+        "2019": 0.0342,
+        "2020": 0.072,
+        "2021": 0.0214,
+        "2022": 0.0616,
+        "2023": 0.1074,
+        "2024": 0.0907,
+        "2025": 0.0632,
+        "2026": 0.0337
+      },
+      "max_year": 2017,
+      "max_year_share": 0.23749215864958875,
+      "single_year_flag": false,
+      "long": {
+        "n": 153,
+        "mean_bps": 15.355017773513708,
+        "sum": 0.23493177193475975,
+        "win_pct": 67.97385620915033
+      },
+      "short": {
+        "n": 167,
+        "mean_bps": 26.062779084966643,
+        "sum": 0.43524841071894294,
+        "win_pct": 74.8502994011976
+      }
+    },
+    "spike_share_hl_hi": {
+      "name": "spike_share_hl_hi",
+      "definition": "sig \u30d0\u30fc\u306e 5\u5206\u7a93\u6700\u5927|move| > 0.6\u00d7(max-min)",
+      "n": 75,
+      "n_excluded_nan": 0,
+      "mean_bps": 39.71420948304055,
+      "sum_pnl": 0.2978565711228041,
+      "pnl_share_pct": 15.179725365549086,
+      "win_rate_pct": 82.66666666666667,
+      "rest_mean_bps": 14.702767189813502,
+      "ci_diff_bps": [
+        6.832622496026901,
+        44.015446259985985
+      ],
+      "small_n": false,
+      "IS": {
+        "n": 44,
+        "mean_bps": 37.06064270526838,
+        "sum": 0.16306682790318086,
+        "win_pct": 79.54545454545455
+      },
+      "OOS": {
+        "n": 31,
+        "mean_bps": 43.480562328910715,
+        "sum": 0.1347897432196232,
+        "win_pct": 87.09677419354838
+      },
+      "yearly_sum": {
+        "2016": 0.0194,
+        "2017": 0.0466,
+        "2018": 0.0243,
+        "2019": 0.0015,
+        "2020": 0.0745,
+        "2021": -0.0032,
+        "2022": 0.0212,
+        "2023": 0.0315,
+        "2024": 0.0529,
+        "2025": 0.0292
+      },
+      "max_year": 2020,
+      "max_year_share": 0.24998563600291637,
+      "single_year_flag": false,
+      "long": {
+        "n": 45,
+        "mean_bps": 29.549894067786866,
+        "sum": 0.1329745233050409,
+        "win_pct": 77.77777777777779
+      },
+      "short": {
+        "n": 30,
+        "mean_bps": 54.96068260592105,
+        "sum": 0.16488204781776314,
+        "win_pct": 90.0
+      }
+    },
+    "missing_gt25": {
+      "name": "missing_gt25",
+      "definition": "sig \u30d0\u30fc\u306e M1 \u6b20\u640d > 25%(minutes<180)",
+      "n": 33,
+      "n_excluded_nan": 0,
+      "mean_bps": 21.652085335454146,
+      "sum_pnl": 0.07145188160699868,
+      "pnl_share_pct": 3.641416858984746,
+      "win_rate_pct": 75.75757575757575,
+      "rest_mean_bps": 16.105263504281886,
+      "ci_diff_bps": [
+        -23.30084689055515,
+        31.517833240385272
+      ],
+      "small_n": false,
+      "IS": {
+        "n": 26,
+        "mean_bps": 24.672151813027295,
+        "sum": 0.06414759471387096,
+        "win_pct": 76.92307692307693
+      },
+      "OOS": {
+        "n": 7,
+        "mean_bps": 10.434695561611031,
+        "sum": 0.007304286893127721,
+        "win_pct": 71.42857142857143
+      },
+      "yearly_sum": {
+        "2017": 0.0104,
+        "2018": -0.0012,
+        "2019": 0.0316,
+        "2020": 0.0272,
+        "2021": -0.0038,
+        "2022": 0.0208,
+        "2023": 0.0095,
+        "2024": 0.004,
+        "2026": -0.027
+      },
+      "max_year": 2019,
+      "max_year_share": 0.4428639840498363,
+      "single_year_flag": false,
+      "long": {
+        "n": 22,
+        "mean_bps": 33.00841124503197,
+        "sum": 0.07261850473907033,
+        "win_pct": 77.27272727272727
+      },
+      "short": {
+        "n": 11,
+        "mean_bps": -1.0605664837015,
+        "sum": -0.00116662313207165,
+        "win_pct": 72.72727272727273
+      }
+    },
+    "stale_gt60": {
+      "name": "stale_gt60",
+      "definition": "sig \u30d0\u30fc\u306e\u540c\u4e00 close \u9023\u7d9a > 60\u5206(\u30c7\u30fc\u30bf\u51cd\u7d50)",
+      "n": 0,
+      "n_excluded_nan": 0
+    },
+    "late_move": {
+      "name": "late_move",
+      "definition": "sig \u30d0\u30fc\u306e net move \u306e60%\u8d85\u304c\u6700\u5f8c30\u5206(\u5f15\u3051\u9593\u969b\u306e\u6025\u5909)",
+      "n": 100,
+      "n_excluded_nan": 0,
+      "mean_bps": 16.105205870011922,
+      "sum_pnl": 0.16105205870011924,
+      "pnl_share_pct": 8.207729013358437,
+      "win_rate_pct": 70.0,
+      "rest_mean_bps": 16.270621122941037,
+      "ci_diff_bps": [
+        -14.740447425228806,
+        12.53320853594808
+      ],
+      "small_n": false,
+      "IS": {
+        "n": 62,
+        "mean_bps": 7.422748926864166,
+        "sum": 0.046021043346557836,
+        "win_pct": 66.12903225806451
+      },
+      "OOS": {
+        "n": 38,
+        "mean_bps": 30.271319829884582,
+        "sum": 0.1150310153535614,
+        "win_pct": 76.31578947368422
+      },
+      "yearly_sum": {
+        "2016": 0.0147,
+        "2017": 0.0437,
+        "2018": 0.0251,
+        "2019": -0.0122,
+        "2020": -0.0334,
+        "2021": 0.0081,
+        "2022": 0.0319,
+        "2023": 0.0319,
+        "2024": 0.0152,
+        "2025": 0.0281,
+        "2026": 0.0079
+      },
+      "max_year": 2017,
+      "max_year_share": 0.27123044007076946,
+      "single_year_flag": false,
+      "long": {
+        "n": 47,
+        "mean_bps": 15.100538356037404,
+        "sum": 0.0709725302733758,
+        "win_pct": 63.829787234042556
+      },
+      "short": {
+        "n": 53,
+        "mean_bps": 16.996137439008198,
+        "sum": 0.09007952842674344,
+        "win_pct": 75.47169811320755
+      }
+    },
+    "drift_gt05": {
+      "name": "drift_gt05",
+      "definition": "\u30a8\u30f3\u30c8\u30ea\u30fc\u30d0\u30fc |close \u2212 \u6700\u5f8c15\u5206\u4e2d\u592e\u5024| > 0.5 ATR20(\u57f7\u884c\u4fa1\u683c\u304c\u30b9\u30d1\u30a4\u30af\u5148\u7aef)",
+      "n": 11,
+      "n_excluded_nan": 29,
+      "mean_bps": -7.913620281567772,
+      "sum_pnl": -0.008704982309724548,
+      "pnl_share_pct": -0.4436337941965421,
+      "win_rate_pct": 54.54545454545454,
+      "rest_mean_bps": 17.021047694488846,
+      "ci_diff_bps": [
+        -74.46447191713767,
+        15.151757848486163
+      ],
+      "small_n": true,
+      "IS": {
+        "n": 10,
+        "mean_bps": -9.196391984121188,
+        "sum": -0.009196391984121189,
+        "win_pct": 50.0
+      },
+      "OOS": {
+        "n": 1,
+        "mean_bps": 4.91409674396641,
+        "sum": 0.000491409674396641,
+        "win_pct": 100.0
+      },
+      "yearly_sum": {
+        "2017": -0.015,
+        "2018": -0.0035,
+        "2019": 0.004,
+        "2020": 0.0053,
+        "2022": 0.0005
+      },
+      "max_year": 2017,
+      "max_year_share": 1.7227292807515182,
+      "single_year_flag": true,
+      "long": {
+        "n": 7,
+        "mean_bps": -14.533377037175743,
+        "sum": -0.01017336392602302,
+        "win_pct": 57.14285714285714
+      },
+      "short": {
+        "n": 4,
+        "mean_bps": 3.6709540407461763,
+        "sum": 0.0014683816162984705,
+        "win_pct": 50.0
+      }
+    },
+    "drift_fav_gt05": {
+      "name": "drift_fav_gt05",
+      "definition": "\u30a8\u30f3\u30c8\u30ea\u30fc\u30d0\u30fc drift_fav > 0.5 ATR(\u6709\u5229\u65b9\u5411\u306e\u5148\u7aef\u3067\u7d04\u5b9a=\u5e7b\u5f71\u65b9\u5411)",
+      "n": 4,
+      "n_excluded_nan": 29,
+      "mean_bps": 46.19350834430525,
+      "sum_pnl": 0.0184774033377221,
+      "pnl_share_pct": 0.9416676861544235,
+      "win_rate_pct": 75.0,
+      "rest_mean_bps": 16.688022830488944,
+      "ci_diff_bps": [
+        -13.651432790034894,
+        74.34130704804063
+      ],
+      "small_n": true,
+      "IS": {
+        "n": 4,
+        "mean_bps": 46.19350834430525,
+        "sum": 0.0184774033377221,
+        "win_pct": 75.0
+      },
+      "OOS": {
+        "n": 0,
+        "mean_bps": NaN,
+        "sum": 0.0,
+        "win_pct": NaN
+      },
+      "yearly_sum": {
+        "2018": 0.0121,
+        "2019": 0.0064
+      },
+      "max_year": 2018,
+      "max_year_share": 0.6537581167270206,
+      "single_year_flag": true,
+      "long": {
+        "n": 2,
+        "mean_bps": 77.72290479099429,
+        "sum": 0.01554458095819886,
+        "win_pct": 100.0
+      },
+      "short": {
+        "n": 2,
+        "mean_bps": 14.664111897616202,
+        "sum": 0.0029328223795232404,
+        "win_pct": 50.0
+      }
+    }
+  },
+  "overlap": {
+    "spike_made_med": {
+      "spike_made_med": 725,
+      "spike_made_l5": 93,
+      "spike_share_hi": 194,
+      "spike_share_hl_hi": 37,
+      "missing_gt25": 22,
+      "stale_gt60": 0,
+      "late_move": 80,
+      "drift_gt05": 7,
+      "drift_fav_gt05": 4
+    },
+    "spike_made_l5": {
+      "spike_made_med": 93,
+      "spike_made_l5": 98,
+      "spike_share_hi": 38,
+      "spike_share_hl_hi": 7,
+      "missing_gt25": 0,
+      "stale_gt60": 0,
+      "late_move": 27,
+      "drift_gt05": 2,
+      "drift_fav_gt05": 2
+    },
+    "spike_share_hi": {
+      "spike_made_med": 194,
+      "spike_made_l5": 38,
+      "spike_share_hi": 320,
+      "spike_share_hl_hi": 74,
+      "missing_gt25": 16,
+      "stale_gt60": 0,
+      "late_move": 64,
+      "drift_gt05": 1,
+      "drift_fav_gt05": 0
+    },
+    "spike_share_hl_hi": {
+      "spike_made_med": 37,
+      "spike_made_l5": 7,
+      "spike_share_hi": 74,
+      "spike_share_hl_hi": 75,
+      "missing_gt25": 9,
+      "stale_gt60": 0,
+      "late_move": 9,
+      "drift_gt05": 0,
+      "drift_fav_gt05": 0
+    },
+    "missing_gt25": {
+      "spike_made_med": 22,
+      "spike_made_l5": 0,
+      "spike_share_hi": 16,
+      "spike_share_hl_hi": 9,
+      "missing_gt25": 33,
+      "stale_gt60": 0,
+      "late_move": 2,
+      "drift_gt05": 0,
+      "drift_fav_gt05": 0
+    },
+    "stale_gt60": {
+      "spike_made_med": 0,
+      "spike_made_l5": 0,
+      "spike_share_hi": 0,
+      "spike_share_hl_hi": 0,
+      "missing_gt25": 0,
+      "stale_gt60": 0,
+      "late_move": 0,
+      "drift_gt05": 0,
+      "drift_fav_gt05": 0
+    },
+    "late_move": {
+      "spike_made_med": 80,
+      "spike_made_l5": 27,
+      "spike_share_hi": 64,
+      "spike_share_hl_hi": 9,
+      "missing_gt25": 2,
+      "stale_gt60": 0,
+      "late_move": 100,
+      "drift_gt05": 1,
+      "drift_fav_gt05": 1
+    },
+    "drift_gt05": {
+      "spike_made_med": 7,
+      "spike_made_l5": 2,
+      "spike_share_hi": 1,
+      "spike_share_hl_hi": 0,
+      "missing_gt25": 0,
+      "stale_gt60": 0,
+      "late_move": 1,
+      "drift_gt05": 11,
+      "drift_fav_gt05": 4
+    },
+    "drift_fav_gt05": {
+      "spike_made_med": 4,
+      "spike_made_l5": 2,
+      "spike_share_hi": 0,
+      "spike_share_hl_hi": 0,
+      "missing_gt25": 0,
+      "stale_gt60": 0,
+      "late_move": 1,
+      "drift_gt05": 4,
+      "drift_fav_gt05": 4
+    }
+  }
+}
